@@ -182,7 +182,7 @@ function bindMapTooltips(container) {
     el.addEventListener('mouseenter', () => {
       const text = el.dataset.tooltip;
       if (!text) return;
-      mapTooltip.textContent = text;
+      mapTooltip.innerHTML = text;
       mapTooltip.classList.add('visible');
     });
     el.addEventListener('mousemove', (e) => {
