@@ -413,7 +413,7 @@ p { margin-bottom: 1rem; color: var(--navy); }
 }
 
 .water-map {
-  min-height: 220px;
+  min-height: 260px;
 }
 
 .map-loading-text {
