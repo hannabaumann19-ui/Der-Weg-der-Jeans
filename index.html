@@ -65,7 +65,7 @@
       <span class="chapter-number">01</span>
       <div>
         <h2 class="chapter-title">Baumwollernte</h2>
-        <p class="chapter-location">📍 Usbekistan · Indien · USA</p>
+        <p class="chapter-location">📍 Indien · China · USA · Brasilien · Pakistan · Türkei · Usbekistan · Turkmenistan</p>
       </div>
     </div>
 
@@ -106,53 +106,10 @@
         <div class="card-header">
           <h3>Wasserverbrauch: Wo JeansUnstitched entsteht</h3>
         </div>
-        <div class="water-map" id="cotton-map">
-          <svg viewBox="0 0 600 300" class="map-svg">
-            <!-- Vereinfachte Weltkarte-Silhouette -->
-            <rect width="600" height="300" fill="var(--beige-light)" rx="8"/>
-            
-            <!-- Landmassen (vereinfacht) -->
-            <g class="land-masses" fill="var(--beige-mid)" stroke="var(--beige-dark)" stroke-width="0.5">
-              <!-- Europa -->
-              <ellipse cx="290" cy="95" rx="45" ry="30"/>
-              <!-- Afrika -->
-              <ellipse cx="295" cy="175" rx="38" ry="55"/>
-              <!-- Asien -->
-              <ellipse cx="390" cy="100" rx="80" ry="45"/>
-              <!-- Nordamerika -->
-              <ellipse cx="120" cy="100" rx="65" ry="50"/>
-              <!-- Südamerika -->
-              <ellipse cx="155" cy="195" rx="35" ry="55"/>
-              <!-- Australien -->
-              <ellipse cx="470" cy="210" rx="35" ry="22"/>
-            </g>
-
-            <!-- Baumwollregionen mit Tooltip -->
-            <g class="cotton-region tooltip-trigger" data-tooltip="Usbekistan: 2.000 L/kg Baumwolle. Ehemals Aralsee-Region — heute Wüste durch intensive Bewässerung." data-x="365" data-y="105">
-              <circle cx="365" cy="105" r="18" fill="var(--navy)" opacity="0.15"/>
-              <circle cx="365" cy="105" r="10" fill="var(--navy)" opacity="0.6" class="pulse"/>
-              <text x="365" y="130" text-anchor="middle" font-size="9" fill="var(--navy)" font-family="DM Sans">Usbekistan</text>
-            </g>
-
-            <g class="cotton-region tooltip-trigger" data-tooltip="Indien: Größter Baumwollproduzent. Kleinbauern oft in Schulden durch teure Saatgut-Lizenzen. 1.500 L Wasser pro kg." data-x="390" data-y="145">
-              <circle cx="390" cy="145" r="22" fill="var(--terracotta)" opacity="0.15"/>
-              <circle cx="390" cy="145" r="12" fill="var(--terracotta)" opacity="0.6" class="pulse"/>
-              <text x="390" y="173" text-anchor="middle" font-size="9" fill="var(--navy)" font-family="DM Sans">Indien</text>
-            </g>
-
-            <g class="cotton-region tooltip-trigger" data-tooltip="USA (Texas): Hochmechanisierte Landwirtschaft, starke staatliche Subventionen. Trockenanbau, 1.000 L/kg." data-x="120" data-y="120">
-              <circle cx="120" cy="120" r="16" fill="var(--sage)" opacity="0.2"/>
-              <circle cx="120" cy="120" r="9" fill="var(--sage)" opacity="0.7" class="pulse"/>
-              <text x="120" y="143" text-anchor="middle" font-size="9" fill="var(--navy)" font-family="DM Sans">USA</text>
-            </g>
-
-            <!-- Legende -->
-            <g transform="translate(20,250)">
-              <circle cx="8" cy="8" r="6" fill="var(--navy)" opacity="0.6"/>
-              <text x="18" y="12" font-size="8" fill="var(--navy-light)" font-family="DM Sans">Hauptanbaugebiet — hover für Details</text>
-            </g>
-          </svg>
+        <div class="water-map" id="cotton-map" data-loading="true">
+          <p class="map-loading-text">Karte wird geladen …</p>
         </div>
+        <p class="chart-note">Methodik: Kreisgröße = Anteil an der Weltproduktion (USDA FAS / Statista, Erntejahr 2023/24–2024/25). Farbe = Wasserintensität in 3 Stufen. Exakte Literangaben nur, wo durch Primärquellen belegt (Chapagain et al. 2006; ScienceDirect-Studie Bahia) — bei „sehr hoch" ohne Literzahl zeigt der Tooltip stattdessen Bewässerungsart und Kontext.</p>
         <!-- Tooltip -->
         <div class="map-tooltip" id="map-tooltip"></div>
       </div>
@@ -784,7 +741,10 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/world-map.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
