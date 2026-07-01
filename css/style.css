@@ -412,6 +412,46 @@ p { margin-bottom: 1rem; color: var(--navy); }
   display: block;
 }
 
+.water-map {
+  min-height: 220px;
+}
+
+.map-loading-text {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--navy-faded);
+  font-size: 0.85rem;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  color: var(--navy-faded);
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.map-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.map-legend-note {
+  width: 100%;
+  font-style: italic;
+}
+
 .card-water, .card {
   position: relative;
 }
