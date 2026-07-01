@@ -19,6 +19,7 @@ window.dataReady = new Promise(async (resolve) => {
     await Promise.all([
       loadHeroStats(),
       loadChapter1Stats(),
+      loadCottonRegions(),
       // weitere loadX()-Funktionen kommen hier Schritt für Schritt dazu
     ]);
   } catch (err) {
@@ -77,4 +78,21 @@ async function loadChapter1Stats() {
     const compareEl = card.querySelector('.stat-compare');
     if (compareEl && row.comparison) compareEl.textContent = row.comparison;
   });
+}
+
+// ============================================
+// WASSERKARTE (Kapitel 1) — Baumwoll-Anbauländer
+// world-map.js liest diese Daten, sobald window.dataReady
+// aufgelöst ist — hier wird nur geladen, nicht gezeichnet.
+// ============================================
+window.cottonRegionsData = [];
+
+async function loadCottonRegions() {
+  const { data, error } = await supabaseClient
+    .from('cotton_regions')
+    .select('*')
+    .order('order_index');
+
+  if (error) { console.error(error); return; }
+  window.cottonRegionsData = data;
 }
