@@ -21,22 +21,6 @@
   const CATEGORY_LABEL = { niedrig: 'niedrig', hoch: 'hoch', sehr_hoch: 'sehr hoch' };
   const CATEGORY_COLOR = { niedrig: '#bcdcf5', hoch: '#c0533a', sehr_hoch: '#1a2744' };
 
-  // Manuelle Label-Positionen je Land (per ISO-Nummerncode).
-  // Nötig, weil einige Anbauländer geografisch eng beieinander liegen
-  // (Indien/Pakistan/China bzw. Usbekistan/Turkmenistan) — eine
-  // automatische "immer mittig unter dem Kreis"-Regel würde dort
-  // Labels übereinanderlappen lassen.
-  const LABEL_OFFSETS = {
-    '356': { dx: 18,  dy: 6,   anchor: 'start'  }, // Indien — rechts
-    '586': { dx: -20, dy: -16, anchor: 'end'    }, // Pakistan — oben links
-    '156': { dx: 6,   dy: -26, anchor: 'start'  }, // China — oben
-    '792': { dx: -18, dy: 4,   anchor: 'end'    }, // Türkei — links
-    '860': { dx: -18, dy: -12, anchor: 'end'    }, // Usbekistan — oben links
-    '795': { dx: 18,  dy: 18,  anchor: 'start'  }, // Turkmenistan — unten rechts
-    '840': { dx: 0,   dy: 0,   anchor: 'middle' }, // USA — Standard (unter Kreis)
-    '76':  { dx: 0,   dy: 0,   anchor: 'middle' }  // Brasilien — Standard (unter Kreis)
-  };
-
   function formatWaterLine(region) {
     if (region.water_exact_value !== null && region.water_exact_value !== undefined) {
       return `${Number(region.water_exact_value).toLocaleString('de-DE')} L/kg Wasser (${region.water_exact_source})`;
@@ -53,7 +37,8 @@
 
   function buildTooltip(region) {
     const flag = region.flag ? region.flag + ' ' : '';
-    return `${flag}${region.name}: ~${region.production_share}% der Weltproduktion. `
+    return `<strong>${flag}${region.name}</strong><br>`
+      + `~${region.production_share}% der Weltproduktion. `
       + `${formatWaterLine(region)}. ${region.irrigation || ''}.`;
   }
 
@@ -64,7 +49,6 @@
   const beigeMid   = rootStyle.getPropertyValue('--beige-mid').trim()   || '#e8dfc8';
   const beigeDark  = rootStyle.getPropertyValue('--beige-dark').trim() || '#c8b99a';
   const beigeLight = rootStyle.getPropertyValue('--beige-light').trim() || '#f5f0e8';
-  const navy       = rootStyle.getPropertyValue('--navy').trim()        || '#1a2744';
 
   function renderMap(cottonRegions) {
     if (!cottonRegions || !cottonRegions.length) {
@@ -139,37 +123,6 @@
             .attr('r', r)
             .attr('fill', color)
             .attr('opacity', 0.85);
-
-          const offset = LABEL_OFFSETS[String(region.iso_numeric)];
-          const labelX = offset ? offset.dx : 0;
-          const labelY = offset ? offset.dy : (r + 13);
-          const anchor = offset ? offset.anchor : 'middle';
-
-          // Dünne Verbindungslinie, wenn das Label seitlich/oben
-          // versetzt ist — sonst ist nicht eindeutig, zu welchem
-          // Kreis das Label gehört.
-          if (offset && (offset.dx !== 0 || offset.dy !== 0)) {
-            g.append('line')
-              .attr('x1', 0).attr('y1', 0)
-              .attr('x2', labelX * 0.55).attr('y2', labelY * 0.55)
-              .attr('stroke', beigeDark)
-              .attr('stroke-width', 0.6)
-              .attr('opacity', 0.6);
-          }
-
-          g.append('text')
-            .attr('x', labelX)
-            .attr('y', labelY)
-            .attr('text-anchor', anchor)
-            .attr('font-size', 10.5)
-            .attr('font-weight', 500)
-            .attr('font-family', 'DM Sans')
-            .attr('fill', navy)
-            .attr('paint-order', 'stroke')
-            .attr('stroke', beigeLight)
-            .attr('stroke-width', 3)
-            .style('pointer-events', 'none')
-            .text(region.name);
         });
 
         const legend = document.createElement('div');
