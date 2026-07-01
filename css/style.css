@@ -132,10 +132,28 @@ body {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: 
+  overflow: hidden;
+  background: var(--beige-light);
+}
+
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/jeans-hero-bg.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.22;
+}
+
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
     radial-gradient(ellipse at 20% 50%, rgba(26,39,68,0.06) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 20%, rgba(192,83,58,0.05) 0%, transparent 50%),
-    var(--beige-light);
+    rgba(245,240,232,0.82);
 }
 
 .hero-content {
