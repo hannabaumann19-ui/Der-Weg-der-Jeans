@@ -249,32 +249,53 @@ if (aralRange && aralBeforeImg && aralHandle && aralFactText) {
 }
 
 // ============================================
-// JEANS ANATOMY TOOLTIPS
+// KAPITEL 3 — PHOTO-HOTSPOTS (Used-Look)
 // ============================================
 
-const anatomyTooltip = document.getElementById('anatomy-tooltip');
+const photoTooltip = document.getElementById('photo-tooltip');
+const photoWrap = document.getElementById('jeans-photo');
 
-document.querySelectorAll('.hotspot').forEach(el => {
-  el.addEventListener('mouseenter', (e) => {
-    const text = el.dataset.tooltip;
-    if (!text || !anatomyTooltip) return;
-    anatomyTooltip.textContent = text;
-    anatomyTooltip.classList.add('visible');
+if (photoWrap && photoTooltip) {
+  document.querySelectorAll('.photo-hotspot').forEach(spot => {
+    spot.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.photo-hotspot').forEach(s => s.classList.remove('active'));
+      spot.classList.add('active');
+      photoTooltip.textContent = spot.dataset.tooltip;
+      photoTooltip.classList.add('visible');
+
+      const left = parseFloat(spot.style.left);
+      const top = parseFloat(spot.style.top);
+      // Tooltip links oder rechts vom Punkt positionieren, je nach Platz
+      if (left > 55) {
+        photoTooltip.style.right = (100 - left) + '%';
+        photoTooltip.style.left = 'auto';
+      } else {
+        photoTooltip.style.left = (left + 6) + '%';
+        photoTooltip.style.right = 'auto';
+      }
+      photoTooltip.style.top = Math.min(top, 60) + '%';
+    });
+    spot.addEventListener('mouseleave', () => {
+      spot.classList.remove('active');
+      photoTooltip.classList.remove('visible');
+    });
   });
-  el.addEventListener('mousemove', (e) => {
-    if (!anatomyTooltip) return;
-    const parent = anatomyTooltip.parentElement.getBoundingClientRect();
-    let x = e.clientX - parent.left + 12;
-    let y = e.clientY - parent.top - 10;
-    if (x + 260 > parent.width) x -= 270;
-    if (y < 0) y = 10;
-    anatomyTooltip.style.left = x + 'px';
-    anatomyTooltip.style.top  = y + 'px';
+}
+
+// ============================================
+// KAPITEL 3 — REVEAL-BUTTON (Rana Plaza)
+// ============================================
+
+const ranaBtn = document.getElementById('rana-btn');
+const ranaBox = document.getElementById('rana-box');
+
+if (ranaBtn && ranaBox) {
+  ranaBtn.addEventListener('click', () => {
+    const isOpen = ranaBox.classList.toggle('open');
+    ranaBtn.textContent = isOpen ? 'Weniger anzeigen' : 'Erfahre mehr';
+    ranaBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
-  el.addEventListener('mouseleave', () => {
-    if (anatomyTooltip) anatomyTooltip.classList.remove('visible');
-  });
-});
+}
 
 // ============================================
 // FLOW DIAGRAM STEPS
@@ -328,19 +349,6 @@ if (insightBtn && insightContent) {
     insightBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
 }
-
-// ============================================
-// CHEMICALS INFO
-// ============================================
-
-const chemInfo = document.getElementById('chem-info');
-
-window.showChemInfo = function(text) {
-  if (chemInfo) chemInfo.textContent = text;
-};
-window.hideChemInfo = function() {
-  if (chemInfo) chemInfo.textContent = 'Hover über eine Chemikalie für Details';
-};
 
 // ============================================
 // TRANSPORT ROUTE ANIMATION
