@@ -77,8 +77,8 @@
       .attr('rx', 8);
 
     const projection = d3.geoNaturalEarth1()
-      .scale(126)
-      .translate([width / 2 - 13, height / 2 + 8]);
+      .scale(150)
+      .translate([width / 2 - 20, height / 2 - 25]);
 
     const geoPath = d3.geoPath(projection);
 
@@ -128,10 +128,19 @@
         const legend = document.createElement('div');
         legend.className = 'map-legend';
         legend.innerHTML = `
-          <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.niedrig}"></span>niedrig</span>
-          <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.hoch}"></span>hoch</span>
-          <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.sehr_hoch}"></span>sehr hoch</span>
-          <span class="map-legend-note">Kreisgröße = Anteil an der Weltproduktion</span>
+          <div class="map-legend-group">
+            <p class="map-legend-heading">Kreisfarbe:</p>
+            <p class="map-legend-sub">Wasserverbrauch der Länder im Vergleich</p>
+            <div class="map-legend-row">
+              <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.niedrig}"></span>niedrig</span>
+              <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.hoch}"></span>hoch</span>
+              <span class="map-legend-item"><span class="map-legend-dot" style="background:${CATEGORY_COLOR.sehr_hoch}"></span>sehr hoch</span>
+            </div>
+          </div>
+          <div class="map-legend-group">
+            <p class="map-legend-heading">Kreisgröße:</p>
+            <p class="map-legend-sub">Anteil an der weltweiten Baumwollproduktion</p>
+          </div>
         `;
         container.appendChild(legend);
 
