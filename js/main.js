@@ -158,6 +158,19 @@ function triggerBars(container) {
       }, 300);
     }
   });
+
+  const energySegs = container.querySelectorAll('.energy-seg');
+  energySegs.forEach((el, i) => {
+    if (!barsTriggered.has(el)) {
+      barsTriggered.add(el);
+      const targetW = el.style.width || '0%';
+      el.style.width = '0%';
+      setTimeout(() => {
+        el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
+        el.style.width = targetW;
+      }, 250);
+    }
+  });
 }
 
 function triggerVisibleAnimations() {
@@ -269,6 +282,24 @@ document.querySelectorAll('.hotspot').forEach(el => {
 
 const flowSteps = document.querySelectorAll('.flow-step');
 const flowInfoBox = document.getElementById('flow-info');
+const flowDiagram = document.getElementById('production-flow');
+
+// Scrollt den (horizontal scrollbaren) Flow-Container so weit,
+// dass der übergebene Schritt komplett sichtbar ist — zuverlässiger
+// als scrollIntoView(), das in einigen Browsern bei horizontalem
+// Scrollen innerhalb eines Containers nicht sauber funktioniert.
+function scrollFlowStepIntoView(step) {
+  if (!flowDiagram) return;
+  const containerRect = flowDiagram.getBoundingClientRect();
+  const stepRect = step.getBoundingClientRect();
+  const buffer = 16;
+
+  if (stepRect.right > containerRect.right) {
+    flowDiagram.scrollBy({ left: stepRect.right - containerRect.right + buffer, behavior: 'smooth' });
+  } else if (stepRect.left < containerRect.left) {
+    flowDiagram.scrollBy({ left: stepRect.left - containerRect.left - buffer, behavior: 'smooth' });
+  }
+}
 
 flowSteps.forEach(step => {
   step.addEventListener('click', () => {
@@ -279,7 +310,7 @@ flowSteps.forEach(step => {
     }
     // Angeklickten Schritt automatisch vollständig ins Bild scrollen,
     // falls er (z.B. Schritt 4) noch abgeschnitten ist.
-    step.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    scrollFlowStepIntoView(step);
   });
 });
 
