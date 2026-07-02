@@ -277,6 +277,9 @@ flowSteps.forEach(step => {
     if (flowInfoBox && step.dataset.info) {
       flowInfoBox.textContent = step.dataset.info;
     }
+    // Angeklickten Schritt automatisch vollständig ins Bild scrollen,
+    // falls er (z.B. Schritt 4) noch abgeschnitten ist.
+    step.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   });
 });
 
