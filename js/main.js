@@ -281,6 +281,21 @@ flowSteps.forEach(step => {
 });
 
 // ============================================
+// INSIGHT TOGGLE (Kapitel 2 — Energiekarte)
+// ============================================
+
+const insightBtn = document.getElementById('insight-btn');
+const insightContent = document.getElementById('insight-text');
+
+if (insightBtn && insightContent) {
+  insightBtn.addEventListener('click', () => {
+    const isOpen = insightContent.classList.toggle('open');
+    insightBtn.classList.toggle('active', isOpen);
+    insightBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+}
+
+// ============================================
 // CHEMICALS INFO
 // ============================================
 
