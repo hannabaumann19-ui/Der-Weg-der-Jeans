@@ -605,11 +605,9 @@ p { margin-bottom: 1rem; color: var(--navy); }
   border-radius: 20px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.72rem;
-  font-weight: 600;
   letter-spacing: 0.02em;
-  color: #ffffff;
-  background: rgba(26, 39, 68, 0.88);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  color: var(--beige-light);
+  background: rgba(26, 39, 68, 0.72);
   pointer-events: none;
   z-index: 2;
 }
@@ -703,14 +701,14 @@ p { margin-bottom: 1rem; color: var(--navy); }
 
 .aral-hint {
   font-size: 0.75rem;
-  color: var(--beige-mid);
+  color: #ffffff;
   font-style: italic;
   margin-bottom: 1rem;
 }
 
 .aral-fact-text {
   font-size: 0.95rem;
-  color: var(--beige-light);
+  color: #ffffff;
   line-height: 1.65;
   opacity: 1;
   transition: opacity 0.25s ease;
