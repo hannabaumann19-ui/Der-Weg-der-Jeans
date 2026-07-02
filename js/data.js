@@ -20,6 +20,7 @@ window.dataReady = new Promise(async (resolve) => {
       loadHeroStats(),
       loadChapter1Stats(),
       loadCottonRegions(),
+      loadTransportData(),
       // weitere loadX()-Funktionen kommen hier Schritt für Schritt dazu
     ]);
   } catch (err) {
@@ -95,4 +96,25 @@ async function loadCottonRegions() {
 
   if (error) { console.error(error); return; }
   window.cottonRegionsData = data;
+}
+
+// ============================================
+// TRANSPORTKARTE (Kapitel 4) — Wegpunkte & Segmente
+// transport-map.js liest diese Daten, sobald
+// window.dataReady aufgelöst ist.
+// ============================================
+window.transportWaypointsData = [];
+window.transportStepsData = [];
+
+async function loadTransportData() {
+  const [waypointsRes, stepsRes] = await Promise.all([
+    supabaseClient.from('transport_waypoints').select('*').order('order_index'),
+    supabaseClient.from('transport_steps').select('*').order('order_index')
+  ]);
+
+  if (waypointsRes.error) { console.error(waypointsRes.error); }
+  else { window.transportWaypointsData = waypointsRes.data; }
+
+  if (stepsRes.error) { console.error(stepsRes.error); }
+  else { window.transportStepsData = stepsRes.data; }
 }
