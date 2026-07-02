@@ -571,6 +571,10 @@ p { margin-bottom: 1rem; color: var(--navy); }
   padding-bottom: 1.75rem;
 }
 
+.aral-card .card-sub {
+  color: var(--beige-mid);
+}
+
 .aral-slider {
   position: relative;
   width: 100%;
@@ -697,14 +701,14 @@ p { margin-bottom: 1rem; color: var(--navy); }
 
 .aral-hint {
   font-size: 0.75rem;
-  color: var(--navy-faded);
+  color: var(--beige-mid);
   font-style: italic;
   margin-bottom: 1rem;
 }
 
 .aral-fact-text {
   font-size: 0.95rem;
-  color: var(--navy);
+  color: var(--beige-light);
   line-height: 1.65;
   opacity: 1;
   transition: opacity 0.25s ease;
