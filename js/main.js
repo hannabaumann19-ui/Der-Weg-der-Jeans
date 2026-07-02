@@ -202,6 +202,40 @@ function bindMapTooltips(container) {
 window.bindMapTooltips = bindMapTooltips;
 
 // ============================================
+// ARALSEE VORHER/NACHHER-SLIDER
+// ============================================
+
+const aralRange = document.getElementById('aral-range');
+const aralBeforeImg = document.getElementById('aral-before-img');
+const aralHandle = document.getElementById('aral-handle');
+const aralFactText = document.getElementById('aral-fact-text');
+
+if (aralRange && aralBeforeImg && aralHandle && aralFactText) {
+  const ARAL_TEXT_BEFORE = aralFactText.textContent;
+  const ARAL_TEXT_AFTER = 'Das Ergebnis: Der See ist heute auf rund 10 Prozent seines ursprünglichen Volumens geschrumpft, eine der größten von Menschen verursachten Umweltkatastrophen der Geschichte. Fischerdörfer liegen heute Dutzende Kilometer von der nächsten Wasserlinie entfernt. Der Meeresboden ist zur Wüste geworden.';
+
+  let aralShowingAfter = false;
+
+  function updateAralSlider(value) {
+    aralBeforeImg.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
+    aralHandle.style.left = value + '%';
+
+    const showAfter = value < 50;
+    if (showAfter !== aralShowingAfter) {
+      aralShowingAfter = showAfter;
+      aralFactText.style.opacity = '0';
+      setTimeout(() => {
+        aralFactText.textContent = showAfter ? ARAL_TEXT_AFTER : ARAL_TEXT_BEFORE;
+        aralFactText.style.opacity = '1';
+      }, 200);
+    }
+  }
+
+  aralRange.addEventListener('input', (e) => updateAralSlider(Number(e.target.value)));
+  updateAralSlider(Number(aralRange.value));
+}
+
+// ============================================
 // JEANS ANATOMY TOOLTIPS
 // ============================================
 
