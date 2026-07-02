@@ -320,98 +320,52 @@
       <span class="chapter-number">04</span>
       <div>
         <h2 class="chapter-title">Die globale Reise</h2>
-        <p class="chapter-location">📍 Dhaka → Hamburg → Würzburg</p>
+        <p class="chapter-location">📍 Usbekistan → Pakistan → China → Bangladesch → Deutschland</p>
       </div>
     </div>
     <div class="chapter-content">
       <div class="text-block">
-        <p class="lead-text">Fertig genäht, verpackt und auf ein Containerschiff verladen: JeansUnstitched beginnt seine letzte Reise — 8.400 Kilometer durch drei Ozeane.</p>
+        <p class="lead-text">Fertig genäht, verpackt und auf ein Containerschiff verladen: JeansUnstitched hat da schon eine lange Reise hinter sich — von der Baumwollernte in Usbekistan bis ins Regal in Würzburg sind es insgesamt rund 25.800 Kilometer.</p>
       </div>
 
       <!-- TRANSPORTKARTE -->
       <div class="card card-transport">
-        <h3>JeansUnstitcheds Transportweg</h3>
-        <div class="transport-map">
-          <svg viewBox="0 0 700 380" id="transport-svg">
-            <rect width="700" height="380" fill="#e8f0f8" rx="12"/>
-            
-            <!-- Ozean-Styling -->
-            <rect width="700" height="380" fill="var(--ocean-blue)" rx="12" opacity="0.3"/>
-            
-            <!-- Landmassen (vereinfacht) -->
-            <g fill="#c8b99a" stroke="#a89880" stroke-width="0.5">
-              <!-- Europa -->
-              <path d="M280 80 Q310 70 330 90 Q340 110 320 130 Q300 140 275 130 Q260 115 265 95 Z"/>
-              <!-- Afrika -->
-              <path d="M285 155 Q310 145 330 170 Q340 210 330 250 Q310 280 285 275 Q265 255 268 210 Q265 175 285 155Z"/>
-              <!-- Asien -->
-              <path d="M380 60 Q450 50 520 70 Q570 90 580 120 Q570 150 530 155 Q480 165 430 145 Q395 130 378 100 Z"/>
-              <!-- Indien -->
-              <path d="M455 145 Q475 150 478 185 Q465 210 450 205 Q435 185 440 160 Z"/>
-              <!-- Nordamerika -->
-              <path d="M70 60 Q130 50 165 75 Q185 100 175 130 Q155 155 120 155 Q80 148 65 120 Q55 90 70 60Z"/>
-              <!-- Südamerika -->
-              <path d="M130 175 Q160 165 175 195 Q185 235 170 275 Q150 295 130 285 Q110 265 112 225 Q110 195 130 175Z"/>
-            </g>
+        <h3>Die globale Reise — von der Baumwolle bis Würzburg</h3>
+        <p class="card-sub">Ein beispielhafter, plausibler Weg entlang der größten Produktions- und Handelszentren</p>
 
-            <!-- ROUTE ANIMATION -->
-            <!-- Segment 1: Dhaka → Colombo -->
-            <path id="route-seg1" d="M480 165 Q475 195 460 210" 
-                  stroke="var(--terracotta)" stroke-width="2.5" fill="none" stroke-dasharray="200" stroke-dashoffset="200"
-                  class="route-path"/>
-            <!-- Segment 2: Colombo → Suez -->
-            <path id="route-seg2" d="M460 210 Q420 200 370 175 Q340 160 330 150"
-                  stroke="var(--terracotta)" stroke-width="2.5" fill="none" stroke-dasharray="300" stroke-dashoffset="300"
-                  class="route-path"/>
-            <!-- Segment 3: Suez → Hamburg -->
-            <path id="route-seg3" d="M330 150 Q315 135 305 120 Q300 108 295 98"
-                  stroke="var(--terracotta)" stroke-width="2.5" fill="none" stroke-dasharray="200" stroke-dashoffset="200"
-                  class="route-path"/>
-            <!-- Segment 4: Hamburg → Würzburg (LKW) -->
-            <path id="route-seg4" d="M295 98 Q292 100 290 105"
-                  stroke="var(--sage-dark)" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="50"
-                  stroke-dasharray="5,3" class="route-path"/>
+        <div class="transport-legend">
+          <div class="transport-legend-item"><span class="transport-legend-dot dot-cotton"></span>Baumwollernte</div>
+          <div class="transport-legend-item"><span class="transport-legend-dot dot-spinweb"></span>Spinnen &amp; Weben</div>
+          <div class="transport-legend-item"><span class="transport-legend-dot dot-sewing"></span>Nähen</div>
+          <div class="transport-legend-item"><span class="transport-legend-dot dot-transport"></span>Transport</div>
+        </div>
 
-            <!-- Städte-Marker -->
-            <g class="city-marker" id="city-dhaka">
-              <circle cx="480" cy="163" r="6" fill="var(--terracotta)" class="pulse-dot"/>
-              <text x="493" y="163" font-size="10" fill="var(--navy)" font-family="DM Sans" font-weight="500">Dhaka</text>
-              <text x="493" y="174" font-size="8" fill="var(--navy)" font-family="DM Sans" opacity="0.7">Konfektion</text>
-            </g>
-            <g class="city-marker" id="city-hamburg" opacity="0">
-              <circle cx="295" cy="96" r="6" fill="var(--navy)" class="pulse-dot"/>
-              <text x="308" y="96" font-size="10" fill="var(--navy)" font-family="DM Sans" font-weight="500">Hamburg</text>
-              <text x="308" y="107" font-size="8" fill="var(--navy)" font-family="DM Sans" opacity="0.7">Hafen</text>
-            </g>
-            <g class="city-marker" id="city-wuerzburg" opacity="0">
-              <circle cx="293" cy="105" r="5" fill="var(--sage-dark)" class="pulse-dot"/>
-              <text x="305" y="105" font-size="9" fill="var(--sage-dark)" font-family="DM Sans" font-weight="500">Würzburg</text>
-            </g>
+        <div id="transport-map-container" data-loading="true">
+          <p class="map-loading-text">Karte wird geladen …</p>
+        </div>
 
-            <!-- Schiff-Icon animiert -->
-            <g id="ship-icon" transform="translate(480,163)">
-              <text font-size="16" text-anchor="middle" dy="4">🚢</text>
-            </g>
+        <div class="map-controls">
+          <button class="btn-animate" id="transport-play-btn" type="button">▶ Route abspielen</button>
+        </div>
 
-            <!-- Legende -->
-            <g transform="translate(20,330)">
-              <line x1="0" y1="8" x2="25" y2="8" stroke="var(--terracotta)" stroke-width="2.5"/>
-              <text x="30" y="12" font-size="9" fill="var(--navy)" font-family="DM Sans">Containerschiff</text>
-              <line x1="100" y1="8" x2="125" y2="8" stroke="var(--sage-dark)" stroke-width="2" stroke-dasharray="4,3"/>
-              <text x="130" y="12" font-size="9" fill="var(--navy)" font-family="DM Sans">LKW</text>
-            </g>
-          </svg>
-          <div class="transport-controls">
-            <button class="btn-animate" id="animate-route-btn" onclick="animateRoute()">
-              ▶ Route abspielen
-            </button>
-            <div class="transport-steps" id="transport-steps">
-              <div class="t-step" id="step-1">📦 Dhaka: Verpackt</div>
-              <div class="t-step" id="step-2">🚢 2.200 km — Colombo</div>
-              <div class="t-step" id="step-3">🌊 6.100 km — Suezkanal</div>
-              <div class="t-step" id="step-4">⚓ Hamburg: Zoll</div>
-              <div class="t-step" id="step-5">🚛 430 km — Würzburg</div>
-            </div>
+        <div class="map-info-box" id="transport-map-info">← Klicke auf einen Punkt oder starte die Animation</div>
+
+        <div class="total-stats">
+          <div class="total-stat">
+            <div class="total-stat-val" id="transport-total-km">~25.800 km</div>
+            <div class="total-stat-label">Gesamtstrecke</div>
+          </div>
+          <div class="total-stat">
+            <div class="total-stat-val">4</div>
+            <div class="total-stat-label">Länder auf dem Landweg</div>
+          </div>
+          <div class="total-stat">
+            <div class="total-stat-val">5+</div>
+            <div class="total-stat-label">Umlade-Punkte</div>
+          </div>
+          <div class="total-stat">
+            <div class="total-stat-val">3</div>
+            <div class="total-stat-label">Transportmittel</div>
           </div>
         </div>
       </div>
@@ -737,6 +691,7 @@
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/world-map.js"></script>
+  <script src="js/transport-map.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
