@@ -1159,7 +1159,7 @@ p { margin-bottom: 1rem; color: var(--navy); }
   border-radius: 14px;
   overflow: hidden;
   aspect-ratio: 16 / 10;
-  background-image: url('assets/used-look.jpg');
+  background-image: url('../assets/used-look.jpg');
   background-size: cover;
   background-position: center;
 }
