@@ -426,18 +426,43 @@ p { margin-bottom: 1rem; color: var(--navy); }
 .map-legend {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.9rem;
-  margin-top: 0.75rem;
+  gap: 1.75rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--beige-mid);
   font-family: 'DM Sans', sans-serif;
+}
+
+.map-legend-group {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.map-legend-heading {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.15rem;
+}
+
+.map-legend-sub {
   font-size: 0.72rem;
   color: var(--navy-faded);
+  margin-bottom: 0.5rem;
+}
+
+.map-legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
 }
 
 .map-legend-item {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--navy-faded);
 }
 
 .map-legend-dot {
@@ -445,11 +470,6 @@ p { margin-bottom: 1rem; color: var(--navy); }
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
-}
-
-.map-legend-note {
-  width: 100%;
-  font-style: italic;
 }
 
 .card-water, .card {
