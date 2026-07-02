@@ -160,63 +160,101 @@
       <!-- FLUSSDIAGRAMM PRODUKTIONSPROZESS -->
       <div class="card">
         <h3>Von der Faser zum Stoff</h3>
+        <p class="card-sub">Vier Schritte, vier Länder, ein Gewebe — klicke auf einen Schritt für Details</p>
+
         <div class="flow-diagram" id="production-flow">
-          <div class="flow-step active" data-info="Rohe Baumwollfasern werden gereinigt und zu langen Faserbändern gekämmt. Energieverbrauch: ~2 kWh/kg">
+          <div class="flow-step active"
+               data-info="Die entkörnte Rohbaumwolle wird gereinigt und zu langen, parallelen Faserbändern gekämmt. Mechanischer Prozess ohne Erhitzung — vergleichsweise energiearm. Hier entsteht aber das größte Gesundheitsrisiko: eingeatmeter Baumwollstaub kann zur anerkannten Berufskrankheit Byssinose führen.">
+            <div class="flow-num">SCHRITT 01</div>
             <div class="flow-icon">🌾</div>
-            <div class="flow-label">Reinigen</div>
-            <div class="flow-sub">Usbekistan</div>
+            <div class="flow-label">Reinigen &amp; Kardieren</div>
+            <div class="flow-loc">📍 z.B. Usbekistan</div>
+            <div class="flow-sub">Rohbaumwolle wird zu Faserband</div>
           </div>
+
           <div class="flow-arrow">→</div>
-          <div class="flow-step" data-info="Fasern werden zu Garn gezwirnt. Spinnereien laufen 24/7 — Lärmpegel über 90 dB, Lungenkrankheit Byssinose häufig.">
+
+          <div class="flow-step"
+               data-info="Die Faserbänder werden zu reißfestem Garn versponnen — der energieintensivste Einzelschritt der gesamten Textilherstellung. Ein Teil des Garns (die späteren Kettfäden) wird direkt im Anschluss mehrfach in synthetisches Indigo getaucht. Dieser Farbstoff wird aus Anilin, einem Erdölprodukt, hergestellt und ist biologisch kaum abbaubar.">
+            <div class="flow-num">SCHRITT 02</div>
             <div class="flow-icon">🧵</div>
             <div class="flow-label">Spinnen</div>
-            <div class="flow-sub">Pakistan</div>
+            <div class="flow-loc">📍 z.B. Pakistan, Indien</div>
+            <div class="flow-sub">Faser wird zu Garn — inkl. Färben der Kettfäden</div>
           </div>
+
           <div class="flow-arrow">→</div>
-          <div class="flow-step" data-info="Aus Garnen entsteht der charakteristische Denim-Köper. 1 Meter Stoff = 4,8 Liter Wasser im Webstuhl-Prozess.">
+
+          <div class="flow-step"
+               data-info="Die gefärbten Kettfäden und die ungefärbten Schussfäden werden auf industriellen Webstühlen in Köperbindung (Twill) verkreuzt. So entsteht die typische diagonale Denim-Struktur — blau außen, weiß innen.">
+            <div class="flow-num">SCHRITT 03</div>
             <div class="flow-icon">🔲</div>
             <div class="flow-label">Weben</div>
-            <div class="flow-sub">China</div>
+            <div class="flow-loc">📍 z.B. China, Bangladesch</div>
+            <div class="flow-sub">Garn wird zu Denim-Gewebe</div>
           </div>
+
           <div class="flow-arrow">→</div>
-          <div class="flow-step" data-info="Stoff wird vorbehandelt: Stärken, Bleichen, Sengen. Chemikalieneinsatz hoch — oft ohne Kläranlagen.">
+
+          <div class="flow-step"
+               data-info="Der fertige Stoff wird stabilisiert: gesengt (Abflammen abstehender Fasern), gebürstet, oft sanforisiert (vorgeschrumpft) — damit er beim späteren Waschen nicht mehr einläuft. Dieser Nassveredlungsschritt ist stark wärmeenergieabhängig.">
+            <div class="flow-num">SCHRITT 04</div>
             <div class="flow-icon">⚗️</div>
             <div class="flow-label">Veredeln</div>
-            <div class="flow-sub">Bangladesh</div>
+            <div class="flow-loc">📍 z.B. Bangladesch, Türkei</div>
+            <div class="flow-sub">Stoff wird stabilisiert &amp; vorbereitet</div>
           </div>
         </div>
-        <div class="flow-info-box" id="flow-info">
-          <p>← Klicke auf einen Schritt für Details</p>
+
+        <div class="flow-info-box" id="flow-info">Die entkörnte Rohbaumwolle wird gereinigt und zu langen, parallelen Faserbändern gekämmt. Mechanischer Prozess ohne Erhitzung — vergleichsweise energiearm. Hier entsteht aber das größte Gesundheitsrisiko: eingeatmeter Baumwollstaub kann zur anerkannten Berufskrankheit Byssinose führen.</div>
+      </div>
+
+      <!-- ENERGIE-INTENSITÄT -->
+      <div class="card">
+        <h3>Wo die Energie hingeht</h3>
+        <p class="card-sub">Anteil an der gesamten Fertigungsenergie von Faser bis fertigem Stoff</p>
+
+        <div class="energy-chart">
+          <div class="energy-legend">
+            <div class="energy-legend-item"><span class="energy-dot spinnen"></span>Spinnen — 48%</div>
+            <div class="energy-legend-item"><span class="energy-dot weben"></span>Weben — 26%</div>
+            <div class="energy-legend-item"><span class="energy-dot veredeln"></span>Nassveredlung / Färben — 22%</div>
+            <div class="energy-legend-item"><span class="energy-dot sonstige"></span>Sonstige — 4%</div>
+          </div>
+
+          <div class="energy-segbar" role="img" aria-label="Energieverteilung: Spinnen 48%, Weben 26%, Nassveredlung 22%, Sonstige 4%">
+            <div class="energy-seg spinnen"  style="width:48%">48%</div>
+            <div class="energy-seg weben"    style="width:26%">26%</div>
+            <div class="energy-seg veredeln" style="width:22%">22%</div>
+            <div class="energy-seg sonstige" style="width:4%"></div>
+          </div>
+
+          <div class="insight-toggle">
+            <button class="insight-icon-btn" id="insight-btn" type="button" aria-expanded="false" aria-controls="insight-text" title="Überraschender Fakt">💡</button>
+            <div class="insight-content" id="insight-text">
+              <div class="insight-content-clip">
+                <div class="insight-inner">
+                  <strong>Überraschend?</strong> Nicht das Weben, sondern das <strong>Spinnen verbraucht mit Abstand am meisten Energie</strong> — fast die Hälfte der gesamten Fertigungsenergie von Faser zu Stoff. Grund: Die Spinnmaschinen laufen im 24-Stunden-Schichtbetrieb mit hoher Drehzahl, während Weben und Nassveredlung anteilig weniger elektrische bzw. mehr thermische Energie benötigen.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="forward-link">
+            <span class="arrow">→</span>
+            <span>Diese Energie steckt später mit in der <strong>CO₂-Bilanz einer Jeans</strong> (Kapitel 6) — Spinnen &amp; Weben zusammen verursachen einen spürbaren Teil der 33 kg CO₂-Äquivalent pro Jeans.</span>
+          </div>
         </div>
       </div>
 
-      <div class="two-col">
-        <div class="info-panel">
-          <h4>Fabrikbedingungen</h4>
-          <ul class="fact-list">
-            <li><span class="dot red"></span> Rana Plaza, 2013: 1.138 Todesopfer</li>
-            <li><span class="dot orange"></span> Ø-Lohn: 95€/Monat (BD, 2023)</li>
-            <li><span class="dot yellow"></span> 60–80 Stunden/Woche Norm</li>
-            <li><span class="dot green"></span> GOTS-Zertifizierung: nur 1% aller Fabriken</li>
-          </ul>
-        </div>
-        <div class="info-panel">
-          <h4>Energieverbrauch</h4>
-          <div class="mini-bar-chart">
-            <div class="bar-row">
-              <span class="bar-label">Weben</span>
-              <div class="bar-track"><div class="bar-fill" style="--w:75%" data-label="7,5 kWh/kg"></div></div>
-            </div>
-            <div class="bar-row">
-              <span class="bar-label">Spinnen</span>
-              <div class="bar-track"><div class="bar-fill" style="--w:55%" data-label="5,5 kWh/kg"></div></div>
-            </div>
-            <div class="bar-row">
-              <span class="bar-label">Veredeln</span>
-              <div class="bar-track"><div class="bar-fill" style="--w:40%" data-label="4,0 kWh/kg"></div></div>
-            </div>
-          </div>
-        </div>
+      <div class="info-panel">
+        <h4>Fabrikbedingungen</h4>
+        <ul class="fact-list">
+          <li><span class="dot red"></span> Rana Plaza, 2013: 1.138 Todesopfer</li>
+          <li><span class="dot orange"></span> Ø-Lohn: 95€/Monat (BD, 2023)</li>
+          <li><span class="dot yellow"></span> 60–80 Stunden/Woche Norm</li>
+          <li><span class="dot green"></span> GOTS-Zertifizierung: nur 1% aller Fabriken</li>
+        </ul>
       </div>
     </div>
   </section>
