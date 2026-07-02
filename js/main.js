@@ -158,23 +158,49 @@ function triggerBars(container) {
       }, 300);
     }
   });
-
-  const energySegs = container.querySelectorAll('.energy-seg');
-  energySegs.forEach((el, i) => {
-    if (!barsTriggered.has(el)) {
-      barsTriggered.add(el);
-      const targetW = el.style.width || '0%';
-      el.style.width = '0%';
-      setTimeout(() => {
-        el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
-        el.style.width = targetW;
-      }, 250);
-    }
-  });
 }
 
 function triggerVisibleAnimations() {
   // Triggered by scroll for elements not in chapters
+}
+
+// ============================================
+// ENERGY SEGMENT BAR — spielt bei jedem Reinscrollen
+// neu ab (im Gegensatz zu den anderen Bars, die nur
+// einmalig beim ersten Sichtbarwerden des Kapitels laufen)
+// ============================================
+
+const energySegBar = document.querySelector('.energy-segbar');
+
+if (energySegBar) {
+  const energySegs = energySegBar.querySelectorAll('.energy-seg');
+  const energyTargets = new Map();
+  energySegs.forEach(el => energyTargets.set(el, el.style.width || '0%'));
+
+  const energyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        energySegs.forEach((el, i) => {
+          el.style.transition = 'none';
+          el.style.width = '0%';
+          // Reflow erzwingen, damit der Browser den Reset auch
+          // wirklich anwendet, bevor die neue Transition startet.
+          void el.offsetWidth;
+          el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
+          el.style.width = energyTargets.get(el);
+        });
+      } else {
+        // Beim Verlassen ohne Animation zurücksetzen, damit der
+        // nächste Eintritt wieder bei 0% startet.
+        energySegs.forEach(el => {
+          el.style.transition = 'none';
+          el.style.width = '0%';
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  energyObserver.observe(energySegBar);
 }
 
 // ============================================
