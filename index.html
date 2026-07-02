@@ -113,6 +113,32 @@
         <div class="map-tooltip" id="map-tooltip"></div>
       </div>
 
+      <!-- ARALSEE VORHER/NACHHER -->
+      <div class="card card-water aral-card">
+        <div class="card-header">
+          <h3>Der Preis des Wassers am Beispiel des Aralsees</h3>
+        </div>
+
+        <div class="aral-slider" id="aral-slider">
+          <div class="aral-image aral-image-after" style="background-image:url('assets/aral-nachher.jpg')"></div>
+          <div class="aral-image aral-image-before" id="aral-before-img" style="background-image:url('assets/aral-frueher.jpg')"></div>
+
+          <span class="aral-tag aral-tag-before">Früher</span>
+          <span class="aral-tag aral-tag-after">Heute</span>
+
+          <div class="aral-handle" id="aral-handle">
+            <span class="aral-handle-line"></span>
+            <span class="aral-handle-circle">↔</span>
+          </div>
+
+          <input type="range" class="aral-range" id="aral-range" min="0" max="100" value="92"
+                 aria-label="Vergleich Aralsee: früher und heute — Regler ziehen">
+        </div>
+        <p class="aral-hint">← Regler ziehen, um die Veränderung zu sehen</p>
+
+        <p class="aral-fact-text" id="aral-fact-text">Der Aralsee war einst das viertgrößte Binnenmeer der Welt, größer als Bayern und Baden-Württemberg zusammen. Ab den 1960er-Jahren wurden seine Zuflüsse systematisch für die Bewässerung riesiger Baumwollplantagen in Usbekistan umgeleitet.</p>
+      </div>
+
     </div>
   </section>
 
