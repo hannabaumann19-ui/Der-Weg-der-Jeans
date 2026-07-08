@@ -377,22 +377,185 @@ if (insightBtn && insightContent) {
 }
 
 // ============================================
-// PRICE BREAKDOWN
+// KAPITEL 5 — PREIS-DONUT
 // ============================================
+(function () {
+  const priceData = [
+    { label: "Einzelhandel",   pct: 40, eur: "20,00 €", color: "var(--navy)" },
+    { label: "Marke / Import", pct: 25, eur: "12,50 €", color: "var(--terracotta)" },
+    { label: "Materialien",    pct: 18, eur: "9,00 €",  color: "var(--beige-dark)", dark: true },
+    { label: "Transport",      pct: 12, eur: "6,00 €",  color: "var(--amber)" },
+    { label: "Arbeitslöhne",   pct: 3,  eur: "1,50 €",  color: "var(--sage-dark)" },
+    { label: "Steuern etc.",   pct: 2,  eur: "1,00 €",  color: "var(--beige-mid)", dark: true },
+  ];
 
-const priceInfoPanel = document.getElementById('price-info');
+  const svgNS = "http://www.w3.org/2000/svg";
+  const ring = document.getElementById("price-donut");
+  const labelsG = document.getElementById("price-labels");
+  if (!ring || !labelsG) return;
 
-window.showPriceInfo = function(who, pct, eur, desc) {
-  if (!priceInfoPanel) return;
-  priceInfoPanel.innerHTML = `
-    <strong style="color:var(--navy)">${who}</strong> — ${pct} (${eur})<br>
-    <span style="color:var(--navy-faded);font-size:0.82rem">${desc}</span>
-  `;
-};
+  const r = 50, cx = 60, cy = 60;
+  const circumference = 2 * Math.PI * r;
+  let cumulative = 0;
 
-window.hidePriceInfo = function() {
-  if (priceInfoPanel) priceInfoPanel.innerHTML = '← Hover für Details zu jedem Anteil';
-};
+  priceData.forEach((d, i) => {
+    const segLen = (d.pct / 100) * circumference;
+
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("class", "price-donut-seg");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", r);
+    circle.setAttribute("stroke", d.color);
+    circle.setAttribute("stroke-dasharray", `${segLen} ${circumference - segLen}`);
+    circle.setAttribute("stroke-dashoffset", -cumulative);
+    circle.setAttribute("data-index", i);
+    ring.appendChild(circle);
+
+    const midLen = cumulative + segLen / 2;
+    const angle = (midLen / circumference) * 2 * Math.PI - Math.PI / 2;
+    const cosA = Math.cos(angle), sinA = Math.sin(angle);
+
+    if (d.pct < 5) {
+      const outerR = r + 15, lineEndR = r + 26, textR = r + 30;
+
+      const line = document.createElementNS(svgNS, "line");
+      line.setAttribute("class", "price-leader");
+      line.setAttribute("x1", cx + outerR * cosA);
+      line.setAttribute("y1", cy + outerR * sinA);
+      line.setAttribute("x2", cx + lineEndR * cosA);
+      line.setAttribute("y2", cy + lineEndR * sinA);
+      line.setAttribute("data-index", i);
+      labelsG.appendChild(line);
+
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("class", "price-pct-label outside");
+      text.setAttribute("x", cx + textR * cosA);
+      text.setAttribute("y", cy + textR * sinA);
+      text.setAttribute("data-index", i);
+      text.setAttribute("text-anchor", cosA > 0.2 ? "start" : cosA < -0.2 ? "end" : "middle");
+      text.textContent = d.pct + "%";
+      labelsG.appendChild(text);
+    } else {
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("class", "price-pct-label" + (d.dark ? " dark" : ""));
+      text.setAttribute("x", cx + r * cosA);
+      text.setAttribute("y", cy + r * sinA);
+      text.setAttribute("data-index", i);
+      if (d.pct < 10) text.setAttribute("font-size", "7px");
+      text.textContent = d.pct + "%";
+      labelsG.appendChild(text);
+    }
+
+    cumulative += segLen;
+  });
+
+  const legendEl = document.getElementById("price-legend");
+  priceData.forEach((d, i) => {
+    const item = document.createElement("div");
+    item.className = "price-legend-item";
+    item.dataset.index = i;
+    item.innerHTML = `
+      <span class="price-legend-dot" style="background:${d.color}"></span>
+      <span class="price-legend-text">${d.label}</span>
+      <span class="price-legend-eur">${d.eur}</span>
+      <span class="price-legend-pct">${d.pct}%</span>
+    `;
+    legendEl.appendChild(item);
+    item.addEventListener("mouseenter", () => highlightPriceSeg(i));
+    item.addEventListener("mouseleave", () => highlightPriceSeg(null));
+  });
+
+  function highlightPriceSeg(index) {
+    ring.querySelectorAll(".price-donut-seg").forEach(seg => {
+      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? "1" : "0.35";
+    });
+    labelsG.querySelectorAll(".price-pct-label").forEach(lbl => {
+      lbl.style.opacity = (index === null || parseInt(lbl.dataset.index) === index) ? "1" : "0.25";
+    });
+    labelsG.querySelectorAll(".price-leader").forEach(ln => {
+      ln.style.opacity = (index === null || parseInt(ln.dataset.index) === index) ? "0.6" : "0.15";
+    });
+    legendEl.querySelectorAll(".price-legend-item").forEach(item => {
+      const isActive = index === null || parseInt(item.dataset.index) === index;
+      item.style.opacity = isActive ? "1" : "0.5";
+      item.classList.toggle("highlight", isActive && index !== null);
+    });
+  }
+
+  ring.querySelectorAll(".price-donut-seg").forEach(seg => {
+    seg.addEventListener("mouseenter", () => highlightPriceSeg(parseInt(seg.dataset.index)));
+    seg.addEventListener("mouseleave", () => highlightPriceSeg(null));
+  });
+})();
+
+// ============================================
+// KAPITEL 6 — CO2-DONUT
+// ============================================
+(function () {
+  const co2Data = [
+    { label: "Nutzung (Waschen/Trocknen)", pct: 37, kg: 12.5, color: "var(--terracotta)", highlight: true },
+    { label: "Spinnen & Weben",            pct: 27, kg: 9.0,  color: "var(--navy)" },
+    { label: "Baumwollanbau",              pct: 11, kg: 3.8,  color: "var(--sage)" },
+    { label: "Nähen & Veredeln",           pct: 9,  kg: 2.9,  color: "var(--sage-dark)" },
+    { label: "Transport & Handel",         pct: 8,  kg: 2.6,  color: "var(--amber)" },
+    { label: "Zubehör & Verpackung",       pct: 5,  kg: 1.7,  color: "var(--beige-dark)" },
+    { label: "Entsorgung",                 pct: 3,  kg: 0.9,  color: "var(--beige-mid)" },
+  ];
+
+  const svg = document.getElementById("co2-donut");
+  const legendEl = document.getElementById("co2-legend");
+  if (!svg || !legendEl) return;
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const r = 50, cx = 60, cy = 60;
+  const circumference = 2 * Math.PI * r;
+  let cumulative = 0;
+
+  co2Data.forEach((d, i) => {
+    const segLen = (d.pct / 100) * circumference;
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("class", "co2-donut-seg");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", r);
+    circle.setAttribute("stroke", d.color);
+    circle.setAttribute("stroke-dasharray", `${segLen} ${circumference - segLen}`);
+    circle.setAttribute("stroke-dashoffset", -cumulative);
+    circle.setAttribute("data-index", i);
+    svg.appendChild(circle);
+    cumulative += segLen;
+  });
+
+  co2Data.forEach((d, i) => {
+    const item = document.createElement("div");
+    item.className = "co2-legend-item" + (d.highlight ? " highlight" : "");
+    item.dataset.index = i;
+    item.innerHTML = `
+      <span class="co2-legend-dot" style="background:${d.color}"></span>
+      <span class="co2-legend-text">${d.label}</span>
+      <span class="co2-legend-kg">${d.kg.toLocaleString('de-DE', {minimumFractionDigits:1})} kg</span>
+      <span class="co2-legend-pct">${d.pct}%</span>
+    `;
+    legendEl.appendChild(item);
+    item.addEventListener("mouseenter", () => highlightSeg(i));
+    item.addEventListener("mouseleave", () => highlightSeg(null));
+  });
+
+  function highlightSeg(index) {
+    svg.querySelectorAll(".co2-donut-seg").forEach(seg => {
+      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? "1" : "0.35";
+    });
+    legendEl.querySelectorAll(".co2-legend-item").forEach(item => {
+      item.style.opacity = (index === null || parseInt(item.dataset.index) === index) ? "1" : "0.5";
+    });
+  }
+
+  svg.querySelectorAll(".co2-donut-seg").forEach(seg => {
+    seg.addEventListener("mouseenter", () => highlightSeg(parseInt(seg.dataset.index)));
+    seg.addEventListener("mouseleave", () => highlightSeg(null));
+  });
+})();
 
 // ============================================
 // KEYBOARD ACCESSIBILITY FOR CHAPTER NAVIGATION
