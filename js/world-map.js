@@ -32,14 +32,20 @@
       return `${min}–${max} L/kg Wasser`;
     }
     const label = CATEGORY_LABEL[region.water_category] || region.water_category;
-    return `Wasserintensität: ${label}`;
+    return `Wasserverbrauch: ${label}`;
   }
 
   function buildTooltip(region) {
     const flag = region.flag ? region.flag + ' ' : '';
-    return `<strong>${flag}${region.name}</strong><br>`
-      + `~${region.production_share}% der Weltproduktion. `
-      + `${formatWaterLine(region)}. ${region.irrigation || ''}.`;
+    // water_note (falls in Supabase gesetzt) ersetzt die automatisch
+    // erzeugte Wasserzeile komplett — für Sonderfälle wie Turkmenistan.
+    const waterLine = region.water_note || formatWaterLine(region);
+    let text = `<strong>${flag}${region.name}</strong><br>`
+      + `~${region.production_share}% der Weltproduktion. ${waterLine}.`;
+    if (region.irrigation) {
+      text += ` ${region.irrigation}.`;
+    }
+    return text;
   }
 
   const width = 760;
