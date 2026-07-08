@@ -1,120 +1,452 @@
-/* ============================================
-   JEANSUNSTICHED — Datenanbindung (Supabase)
-   Lädt alle Inhalte aus der Datenbank und
-   schreibt sie ins DOM, bevor main.js startet.
-   ============================================ */
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JeansUnstitched — Die Reise einer Jeans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-'use strict';
+  <!-- NAVIGATION -->
+  <nav id="main-nav">
+    <div class="nav-logo">JeansUnstitched</div>
+    <div class="nav-progress">
+      <div class="nav-progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="nav-chapters">
+      <button class="chapter-dot active" data-target="chapter-1" title="Baumwolle">1</button>
+      <button class="chapter-dot" data-target="chapter-2" title="Spinnen & Weben">2</button>
+      <button class="chapter-dot" data-target="chapter-3" title="Vom Stoff zur Jeans">3</button>
+      <button class="chapter-dot" data-target="chapter-4" title="Transport">4</button>
+      <button class="chapter-dot" data-target="chapter-5" title="Im Laden">5</button>
+      <button class="chapter-dot" data-target="chapter-6" title="Die Bilanz">6</button>
+      <button class="chapter-dot" data-target="chapter-7" title="Was kannst du tun?">7</button>
+    </div>
+  </nav>
 
-// ⚠️ Hier eure eigenen Werte eintragen (aus Project Settings → API):
-const SUPABASE_URL = 'https://jrpethjnhpkccgyrnrak.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_5p71UNcnrkXHBZiennMYJA_8QB0gM97';
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Eine Dokumentation in 7 Kapiteln</p>
+      <h1 class="hero-title">Jeans<em>Unstitched</em></h1>
+      <p class="hero-subtitle"><strong>Die globale Reise einer Jeans</strong><br>Von der Baumwollernte bis zu deinem Kleiderschrank</p>
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <div class="stat-pill-value">
+            <span class="stat-num" data-count="25800">0</span><span class="stat-unit">km</span>
+          </div>
+          <span class="stat-label">Transportweg</span>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-value">
+            <span class="stat-num" data-count="8000">0</span><span class="stat-unit">L</span>
+          </div>
+          <span class="stat-label">Wasserverbrauch</span>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-value">
+            <span class="stat-num" data-count="33">0</span><span class="stat-unit">kg</span>
+          </div>
+          <span class="stat-label">CO₂ Fußabdruck</span>
+        </div>
+      </div>
+      <button class="cta-button" onclick="scrollToChapter('chapter-1')">
+        Reise beginnen ↓
+      </button>
+    </div>
+  </section>
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <!-- CHAPTER 1: BAUMWOLLE -->
+  <section class="chapter" id="chapter-1">
+    <div class="chapter-header">
+      <span class="chapter-number">01</span>
+      <div>
+        <h2 class="chapter-title">Baumwollernte</h2>
+        <p class="chapter-location">📍 Indien · China · USA · Pakistan · Türkei · Usbekistan · Turkmenistan</p>
+      </div>
+    </div>
 
-// Wird von main.js NICHT mehr gebraucht, main.js wartet stattdessen
-// auf dieses Event, bevor Counter/Balken/Beobachter starten.
-window.dataReady = new Promise(async (resolve) => {
-  try {
-    await Promise.all([
-      loadHeroStats(),
-      loadChapter1Stats(),
-      loadCottonRegions(),
-      loadTransportData(),
-      // weitere loadX()-Funktionen kommen hier Schritt für Schritt dazu
-    ]);
-  } catch (err) {
-    console.error('Fehler beim Laden der Daten aus Supabase:', err);
-  }
-  resolve();
-});
+    <div class="chapter-content">
+      <!-- STAT CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card stat-land">
+          <div class="stat-icon">🌱</div>
+          <div class="stat-value counter" data-target="800">0</div>
+          <div class="stat-unit">Gramm</div>
+          <div class="stat-desc">Baumwollfaser pro Jeans</div>
+          <div class="stat-compare">≈ 3 ausgewachsene Baumwollpflanzen</div>
+        </div>
+        <div class="stat-card stat-workers">
+          <div class="stat-icon">👤</div>
+          <div class="stat-value">250 Mio.</div>
+          <div class="stat-unit">Menschen</div>
+          <div class="stat-desc">leben weltweit vom Baumwollanbau</div>
+          <div class="stat-compare">~65% davon Kleinbauernfamilien</div>
+        </div>
+        <div class="stat-card stat-water">
+          <div class="stat-icon">💧</div>
+          <div class="stat-value counter" data-target="8000">0</div>
+          <div class="stat-unit">Liter</div>
+          <div class="stat-desc">Wasser für die Baumwolle einer Jeans</div>
+          <div class="stat-compare">= 80 volle Badewannen</div>
+        </div>
+      </div>
 
-// ============================================
-// HERO STATS (die drei Pillen ganz oben)
-// ============================================
-async function loadHeroStats() {
-  const { data, error } = await supabaseClient
-    .from('stats')
-    .select('*')
-    .eq('section', 'hero')
-    .order('order_index');
+      <div class="text-block">
+        <p data-content-key="chapter1-p1">Für die Herstellung einer einzigen Jeans werden ca. 800 Gramm Baumwollfaser verwendet. Für den Anbau und die Bewässerung dieser Menge Baumwolle werden durchschnittlich 8.000 Liter Wasser benötigt.</p>
+        <p data-content-key="chapter1-p2">Baumwolle ist durstig und wächst am liebsten dort, wo Wasser ohnehin knapp ist. Ort des Anbaus und Art der Bewässerung entscheiden dabei maßgeblich darüber, wie viel Wasser tatsächlich verbraucht wird. Beispielsweise wird für die Baumwoll-Bewässerung in Indien fast das Vierfache an Wasser benötigt wie in den USA.</p>
+      </div>
 
-  if (error) { console.error(error); return; }
+      <!-- WASSERKARTE -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Wasserverbrauch des Baumwollanbaus und woher kommt sie eigentlich?</h3>
+        </div>
+        <div class="water-map" id="cotton-map" data-loading="true">
+          <p class="map-loading-text">Karte wird geladen …</p>
+        </div>
+        <!-- Tooltip -->
+        <div class="map-tooltip" id="map-tooltip"></div>
+      </div>
 
-  const pills = document.querySelectorAll('.hero-stats .stat-pill');
-  data.forEach((row, i) => {
-    const pill = pills[i];
-    if (!pill) return;
-    pill.querySelector('.stat-num').dataset.target = row.value.replace(/\./g, '');
-    pill.querySelector('.stat-unit').textContent = row.unit;
-    pill.querySelector('.stat-label').textContent = row.label;
-  });
-}
+      <!-- ARALSEE VORHER/NACHHER -->
+      <div class="card card-dark aral-card">
+        <div class="card-header">
+          <h3>Der Preis des Wassers am Beispiel des Aralsees</h3>
+        </div>
 
-// ============================================
-// KAPITEL 1 STAT-CARDS (Wasser / Baumwolle / Menschen)
-// ============================================
-async function loadChapter1Stats() {
-  const { data, error } = await supabaseClient
-    .from('stats')
-    .select('*')
-    .eq('section', 'chapter1')
-    .order('order_index');
+        <div class="aral-slider" id="aral-slider">
+          <div class="aral-image aral-image-after" style="background-image:url('assets/aral-nachher.jpg')"></div>
+          <div class="aral-image aral-image-before" id="aral-before-img" style="background-image:url('assets/aral-frueher.jpg')"></div>
 
-  if (error) { console.error(error); return; }
+          <span class="aral-tag aral-tag-before">Früher</span>
+          <span class="aral-tag aral-tag-after">Heute</span>
 
-  const cards = document.querySelectorAll('#chapter-1 .stats-grid .stat-card');
-  data.forEach((row, i) => {
-    const card = cards[i];
-    if (!card) return;
-    const valueEl = card.querySelector('.stat-value');
-    // Falls die Zahl animiert werden soll (counter), data-target setzen:
-    if (valueEl.classList.contains('counter')) {
-      valueEl.dataset.target = row.value.replace(/\D/g, '');
-    } else {
-      valueEl.textContent = row.value;
-    }
-    card.querySelector('.stat-unit').textContent = row.unit;
-    card.querySelector('.stat-desc').innerHTML = row.label;
-    const compareEl = card.querySelector('.stat-compare');
-    if (compareEl && row.comparison) compareEl.textContent = row.comparison;
-  });
-}
+          <div class="aral-handle" id="aral-handle">
+            <span class="aral-handle-line"></span>
+            <span class="aral-handle-circle">↔</span>
+          </div>
 
-// ============================================
-// WASSERKARTE (Kapitel 1) — Baumwoll-Anbauländer
-// world-map.js liest diese Daten, sobald window.dataReady
-// aufgelöst ist — hier wird nur geladen, nicht gezeichnet.
-// ============================================
-window.cottonRegionsData = [];
+          <input type="range" class="aral-range" id="aral-range" min="0" max="100" value="92"
+                 aria-label="Vergleich Aralsee: früher und heute — Regler ziehen">
+        </div>
+        <p class="aral-hint">← Regler ziehen, um die Veränderung zu sehen</p>
 
-async function loadCottonRegions() {
-  const { data, error } = await supabaseClient
-    .from('cotton_regions')
-    .select('*')
-    .order('order_index');
+        <p class="aral-fact-text" id="aral-fact-text">Der Aralsee war einst das viertgrößte Binnenmeer der Welt, größer als Bayern und Baden-Württemberg zusammen. Ab den 1960er-Jahren wurden seine Zuflüsse systematisch für die Bewässerung riesiger Baumwollplantagen in Usbekistan umgeleitet.</p>
+      </div>
 
-  if (error) { console.error(error); return; }
-  window.cottonRegionsData = data;
-}
+    </div>
+  </section>
 
-// ============================================
-// TRANSPORTKARTE (Kapitel 4) — Wegpunkte & Segmente
-// transport-map.js liest diese Daten, sobald
-// window.dataReady aufgelöst ist.
-// ============================================
-window.transportWaypointsData = [];
-window.transportStepsData = [];
+  <!-- CHAPTER 2: SPINNEN & WEBEN -->
+  <section class="chapter" id="chapter-2">
+    <div class="chapter-header">
+      <span class="chapter-number">02</span>
+      <div>
+        <h2 class="chapter-title">Spinnen & Weben</h2>
+        <p class="chapter-location">📍 Bangladesh · Pakistan · China</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <!-- FLUSSDIAGRAMM PRODUKTIONSPROZESS -->
+      <div class="card">
+        <h3>Von der Faser zum Stoff</h3>
+        <p class="card-sub">Vier Schritte, vier Länder, ein Gewebe — klicke auf einen Schritt für Details</p>
 
-async function loadTransportData() {
-  const [waypointsRes, stepsRes] = await Promise.all([
-    supabaseClient.from('transport_waypoints').select('*').order('order_index'),
-    supabaseClient.from('transport_steps').select('*').order('order_index')
-  ]);
+        <div class="flow-diagram" id="production-flow">
+          <p class="map-loading-text">Lädt …</p>
+        </div>
 
-  if (waypointsRes.error) { console.error(waypointsRes.error); }
-  else { window.transportWaypointsData = waypointsRes.data; }
+        <div class="flow-info-box" id="flow-info">← Klicke auf einen Schritt für Details</div>
+      </div>
 
-  if (stepsRes.error) { console.error(stepsRes.error); }
-  else { window.transportStepsData = stepsRes.data; }
-}
+      <!-- ENERGIE-INTENSITÄT -->
+      <div class="card">
+        <h3>Wo die Energie hingeht</h3>
+        <p class="card-sub">Anteil an der gesamten Fertigungsenergie von Faser bis fertigem Stoff</p>
+
+        <div class="energy-chart">
+          <div class="energy-legend"></div>
+
+          <div class="energy-segbar" role="img"></div>
+
+          <div class="insight-toggle">
+            <button class="insight-icon-btn" id="insight-btn" type="button" aria-expanded="false" aria-controls="insight-text" title="Überraschender Fakt">💡</button>
+            <div class="insight-content" id="insight-text">
+              <div class="insight-content-clip">
+                <div class="insight-inner" data-content-key="chapter2-insight">
+                  <strong>Überraschend?</strong> Nicht das Weben, sondern das <strong>Spinnen verbraucht mit Abstand am meisten Energie</strong> — fast die Hälfte der gesamten Fertigungsenergie von Faser zu Stoff.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="forward-link">
+            <span class="arrow">→</span>
+            <span data-content-key="chapter2-forward-link">Diese Energie steckt später mit in der <strong>CO₂-Bilanz einer Jeans</strong> (Kapitel 6).</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CHAPTER 3: VOM STOFF ZUR JEANS -->
+  <section class="chapter" id="chapter-3">
+    <div class="chapter-header">
+      <span class="chapter-number">03</span>
+      <div>
+        <h2 class="chapter-title">Vom Stoff zur Jeans</h2>
+        <p class="chapter-location">📍 Dhaka, Bangladesch</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🧵</div>
+          <div class="stat-value">120</div>
+          <div class="stat-unit">Arbeitsschritte</div>
+          <div class="stat-desc">für eine einzige Jeans, vom Zuschnitt bis zur fertigen Hose</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value">4 Mio.+</div>
+          <div class="stat-unit">Beschäftigte</div>
+          <div class="stat-desc">in Bangladeschs Bekleidungsindustrie, ~70% Frauen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💶</div>
+          <div class="stat-value">106 €</div>
+          <div class="stat-unit">Monatslohn</div>
+          <div class="stat-desc">seit Dez. 2023 — zuvor 68 € seit 2018</div>
+        </div>
+      </div>
+
+      <p class="body-text" data-content-key="chapter3-body">Der fertige Denim-Stoff — blau außen, weiß innen — reist weiter nach Bangladesch. Hier wird aus einer Stoffbahn eine Hose.</p>
+
+      <button class="reveal-btn" id="rana-btn" type="button" aria-expanded="false" aria-controls="rana-box">Erfahre mehr</button>
+      <div class="reveal-content" id="rana-box">
+        <div class="reveal-content-clip">
+          <div class="memorial-box">
+            <img class="memorial-img" src="assets/rana-plaza.jpg" alt="Rettungskräfte und Angehörige am eingestürzten Rana-Plaza-Gebäude in Savar, Bangladesch">
+            <div class="memorial-body">
+              <div class="memorial-date">24. April 2013 — Savar, bei Dhaka</div>
+              <div class="memorial-title">Rana Plaza</div>
+              <div class="memorial-text">
+                Ein achtstöckiges Fabrikgebäude stürzt ein — <strong>1.135 Menschen sterben, 2.438 werden verletzt.</strong>
+                Anschließend protestieren Hunderttausende Textilarbeiter gegen ihre miserablen Arbeitsbedingungen.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="photo-hotspot-card">
+        <h3>Der künstliche Used-Look – gefährliche Techniken</h3>
+        <p class="card-sub">Neue Jeans sollen oft aussehen, als wären sie schon Jahre alt. Bewege die Maus über die drei Punkte und erfahre mehr zu den teilweise riskanten Techniken Chemisches Bleichen, Sandstrahlen und Stonewashing.</p>
+        <div class="photo-hotspot-wrap" id="jeans-photo">
+          <div class="photo-tooltip" id="photo-tooltip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4: TRANSPORT -->
+  <section class="chapter" id="chapter-4">
+    <div class="chapter-header">
+      <span class="chapter-number">04</span>
+      <div>
+        <h2 class="chapter-title">Die globale Reise</h2>
+        <p class="chapter-location">📍 Usbekistan → Pakistan → China → Bangladesch → Deutschland</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <div class="text-block">
+        <p data-content-key="chapter4-lead">Fertig genäht, verpackt und auf ein Containerschiff verladen: JeansUnstitched hat da schon eine lange Reise hinter sich — von der Baumwollernte in Usbekistan bis ins Regal in Würzburg sind es insgesamt rund 25.800 Kilometer.</p>
+      </div>
+
+      <!-- TRANSPORTKARTE -->
+      <div class="card card-transport">
+        <h3>Die globale Reise — von der Baumwolle bis Würzburg</h3>
+        <p class="card-sub">Ein beispielhafter, plausibler Weg entlang der größten Produktions- und Handelszentren</p>
+
+        <div id="transport-map-container" data-loading="true"></div>
+
+        <div class="map-controls">
+          <button class="btn-animate" id="transport-play-btn" type="button">▶ Route abspielen</button>
+        </div>
+
+        <div class="transport-legend" id="transport-legend">
+          <div class="transport-legend-item" data-legend-cat="cotton"><span class="transport-legend-dot dot-cotton"></span>Baumwollernte</div>
+          <div class="transport-legend-item" data-legend-cat="spinweb"><span class="transport-legend-dot dot-spinweb"></span>Spinnen &amp; Weben</div>
+          <div class="transport-legend-item" data-legend-cat="sewing"><span class="transport-legend-dot dot-sewing"></span>Nähen</div>
+          <div class="transport-legend-item" data-legend-cat="transport"><span class="transport-legend-dot dot-transport"></span>Transport</div>
+        </div>
+
+        <div class="map-info-box" id="transport-map-info">← Klicke auf einen Punkt, fahre über eine Strecke, oder starte die Animation</div>
+
+        <div class="total-stats">
+          <div class="total-stat">
+            <div class="total-stat-val" id="transport-total-km">~25.800 km</div>
+            <div class="total-stat-label">Gesamtstrecke</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- KAPITEL 5: IM LADEN -->
+  <section class="chapter" id="chapter-5">
+    <div class="chapter-header">
+      <span class="chapter-number">05</span>
+      <div>
+        <h2 class="chapter-title">Im Laden</h2>
+        <p class="chapter-location">📍 Würzburg, Deutschland</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <p class="body-text" data-content-key="chapter5-body">Die Gewinnverteilung in der Modeindustrie ist extrem ungleich.</p>
+
+      <div class="card">
+        <h3>Wer bekommt was vom Preis?</h3>
+        <p class="card-sub">Aufteilung eines beispielhaften Verkaufspreises von 49,99 €</p>
+
+        <div class="price-donut-layout">
+          <div class="price-donut-wrap">
+            <svg viewBox="-20 -20 160 160" overflow="visible">
+              <g class="price-donut-ring" id="price-donut"></g>
+              <g id="price-labels"></g>
+            </svg>
+            <div class="price-donut-center">
+              <div class="price-donut-value">49,99 €</div>
+              <div class="price-donut-label">Verkaufspreis</div>
+            </div>
+          </div>
+          <div class="price-donut-legend" id="price-legend"></div>
+        </div>
+
+        <div class="wage-compare">
+          <div class="wage-compare-item wage">
+            <div class="wage-compare-num">1,50 €</div>
+            <div class="wage-compare-desc">Lohnanteil der Näherin für die Herstellung der Jeans</div>
+          </div>
+          <div class="wage-compare-vs">VS</div>
+          <div class="wage-compare-item price">
+            <div class="wage-compare-num">49,99 €</div>
+            <div class="wage-compare-desc">Was du in Würzburg dafür bezahlst</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 6: DIE BILANZ -->
+  <section class="chapter" id="chapter-6">
+    <div class="chapter-header">
+      <span class="chapter-number">06</span>
+      <div>
+        <h2 class="chapter-title">Die Bilanz</h2>
+        <p class="chapter-location">Von der Erde zurück zur Erde</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <div class="card">
+        <h3>CO₂-Fußabdruck einer Jeans</h3>
+        <p class="card-sub">Anteile am Gesamtwert von 33,4 kg CO₂-Äquivalent — vom Feld bis zur Entsorgung</p>
+
+        <div class="co2-donut-layout">
+          <div class="co2-donut-wrap">
+            <svg viewBox="0 0 120 120" id="co2-donut"></svg>
+            <div class="co2-donut-center">
+              <div class="co2-donut-icon">👖</div>
+              <div class="co2-donut-value">33,4 kg</div>
+              <div class="co2-donut-label">CO₂-Äquivalent</div>
+            </div>
+          </div>
+          <div class="co2-donut-legend" id="co2-legend"></div>
+        </div>
+
+        <div class="insight-toggle">
+          <button class="insight-icon-btn" id="co2-insight-btn" type="button" aria-expanded="false" aria-controls="co2-insight-text" title="Überraschender Fakt">💡</button>
+          <div class="insight-content" id="co2-insight-text">
+            <div class="insight-content-clip">
+              <div class="insight-inner" data-content-key="chapter6-insight">
+                <strong>Überraschend?</strong> Nicht die Fabrik, sondern dein eigener Kleiderschrank verursacht den größten Anteil.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="chart-note" data-content-key="chapter6-chart-note">Quelle: Levi Strauss &amp; Co., "The Life Cycle of a Jean" (2015).</p>
+      </div>
+
+      <div class="card">
+        <h3>Jeans-Gesamtbilanz</h3>
+        <p class="card-sub">Die wichtigsten Zahlen der gesamten Reise auf einen Blick</p>
+
+        <div class="balance-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 7: WAS KANNST DU TUN? -->
+  <section class="chapter chapter-final" id="chapter-7">
+    <div class="chapter-header">
+      <span class="chapter-number">07</span>
+      <div>
+        <h2 class="chapter-title">Was kannst du tun?</h2>
+        <p class="chapter-location">📍 Bei dir zu Hause</p>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <p class="intro-text" data-content-key="chapter7-intro">Wie wir gesehen haben, tragen auch wir als Nutzer:innen einen großen Teil der Verantwortung für Nachhaltigkeit.</p>
+
+      <div class="tips-grid"></div>
+
+      <div class="label-section">
+        <h3 class="section-heading">Was bedeuten Gütesiegel?</h3>
+        <p class="card-sub">Die 6 wichtigsten Textilsiegel im Vergleich — nach Strenge der Kontrolle</p>
+
+        <div class="label-grid"></div>
+
+        <div class="siegel-note" data-content-key="chapter7-siegel-note">
+          <strong>Falle im Handel:</strong> Das mit Abstand häufigste Siegel im Handel — OEKO-TEX Standard 100 — schafft es nicht in diese Top 6.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUELLENVERZEICHNIS -->
+  <section class="sources-section" id="quellen">
+    <div class="sources-content">
+      <h2 class="sources-title">Quellenverzeichnis</h2>
+      <p class="sources-intro">Alle in dieser Dokumentation verwendeten Zahlen, Studien und Datenquellen im Überblick.</p>
+      <ul class="sources-list"></ul>
+      <a href="#hero" class="sources-back">↑ Zurück zum Anfang</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <p class="footer-title">JeansUnstitched</p>
+      <p class="footer-sub">Interaktive Dokumentation · Modul Interaktive Medien</p>
+      <p class="footer-credits">Daten &amp; Quellen: <a href="#quellen">Quellenverzeichnis</a> · Visualisierung: D3.js, vanilla JS</p>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/world-map.js"></script>
+  <script src="js/transport-map.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
