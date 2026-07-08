@@ -23,16 +23,16 @@
 
   function formatWaterLine(region) {
     if (region.water_exact_value !== null && region.water_exact_value !== undefined) {
-      return `${Number(region.water_exact_value).toLocaleString('de-DE')} L/kg Wasser (${region.water_exact_source})`;
+      return `${Number(region.water_exact_value).toLocaleString('de-DE')} L/kg Wasser`;
     }
     if (region.water_exact_min !== null && region.water_exact_min !== undefined
         && region.water_exact_max !== null && region.water_exact_max !== undefined) {
       const min = Number(region.water_exact_min).toLocaleString('de-DE');
       const max = Number(region.water_exact_max).toLocaleString('de-DE');
-      return `${min}–${max} L/kg Wasser (${region.water_exact_source})`;
+      return `${min}–${max} L/kg Wasser`;
     }
     const label = CATEGORY_LABEL[region.water_category] || region.water_category;
-    return `Wasserintensität: ${label} — keine belastbare Literzahl verfügbar`;
+    return `Wasserintensität: ${label}`;
   }
 
   function buildTooltip(region) {
