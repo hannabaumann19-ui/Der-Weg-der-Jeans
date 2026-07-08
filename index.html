@@ -413,270 +413,216 @@
     </div>
   </section>
 
-  <!-- CHAPTER 5: VERKAUF -->
-  <section class="chapter" id="chapter-5">
-    <div class="chapter-header">
-      <span class="chapter-number">05</span>
-      <div>
-        <h2 class="chapter-title">Im Laden</h2>
-        <p class="chapter-location">📍 Würzburg, Deutschland</p>
+ <!-- KAPITEL 5: IM LADEN -->
+<section class="chapter" id="chapter-5">
+  <div class="chapter-header">
+    <span class="chapter-number">05</span>
+    <div>
+      <h2 class="chapter-title">Im Laden</h2>
+      <p class="chapter-location">📍 Würzburg, Deutschland</p>
+    </div>
+  </div>
+
+  <p class="body-text">Die Gewinnverteilung in der Modeindustrie ist extrem ungleich. Die Menschen, die die Jeans genäht haben, verdienen nur einen Bruchteil des Verkaufspreises.</p>
+
+  <div class="card">
+    <h3>Wer bekommt was vom Preis?</h3>
+    <p class="card-sub">Aufteilung eines beispielhaften Verkaufspreises von 49,99 €</p>
+
+    <div class="price-donut-layout">
+      <div class="price-donut-wrap">
+        <svg viewBox="-20 -20 160 160" overflow="visible">
+          <g class="price-donut-ring" id="price-donut"></g>
+          <g id="price-labels"></g>
+        </svg>
+        <div class="price-donut-center">
+          <div class="price-donut-value">49,99 €</div>
+          <div class="price-donut-label">Verkaufspreis</div>
+        </div>
+      </div>
+      <div class="price-donut-legend" id="price-legend"></div>
+    </div>
+
+    <div class="wage-compare">
+      <div class="wage-compare-item wage">
+        <div class="wage-compare-num">1,50 €</div>
+        <div class="wage-compare-desc">Lohnanteil der Näherin für die Herstellung der Jeans</div>
+      </div>
+      <div class="wage-compare-vs">VS</div>
+      <div class="wage-compare-item price">
+        <div class="wage-compare-num">49,99 €</div>
+        <div class="wage-compare-desc">Was du in Würzburg dafür bezahlst</div>
       </div>
     </div>
-    <div class="chapter-content">
-      <div class="text-block">
-        <p class="lead-text">JeansUnstitched kostet 49,99 €. Wer bekommt davon was?</p>
-        <p>Die Gewinnverteilung in der Modeindustrie ist extrem ungleich. Die Menschen, die JeansUnstitched genäht haben, verdienen einen Bruchteil des Verkaufspreises.</p>
-      </div>
+  </div>
+</section>
 
-      <!-- PREISAUFTEILUNG INTERAKTIV -->
-      <div class="card">
-        <h3>Wer bekommt was vom Preis?</h3>
-        <div class="price-breakdown">
-          <div class="price-total">
-            <span class="price-eur">49,99 €</span>
-            <span class="price-label">Verkaufspreis</span>
-          </div>
-          <div class="price-slices">
-            <div class="price-slice" style="--color:var(--navy); --pct:40%"
-                 onmouseenter="showPriceInfo('Einzelhandel', '40%', '20,00 €', 'Miete, Personal, Marketing, Gewinn des Händlers')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar"></div>
-              <div class="slice-info">
-                <span class="slice-who">Einzelhandel</span>
-                <span class="slice-pct">40%</span>
-                <span class="slice-eur">20,00 €</span>
-              </div>
-            </div>
-            <div class="price-slice" style="--color:var(--terracotta); --pct:25%"
-                 onmouseenter="showPriceInfo('Marke / Importeur', '25%', '12,50 €', 'Branding, Design, Marketing, Unternehmensgewinn')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar"></div>
-              <div class="slice-info">
-                <span class="slice-who">Marke / Import</span>
-                <span class="slice-pct">25%</span>
-                <span class="slice-eur">12,50 €</span>
-              </div>
-            </div>
-            <div class="price-slice" style="--color:var(--beige-dark); --pct:18%"
-                 onmouseenter="showPriceInfo('Materialien & Rohstoffe', '18%', '9,00 €', 'Baumwolle, Farbe, Zubehör, Verpackung')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar"></div>
-              <div class="slice-info">
-                <span class="slice-who">Materialien</span>
-                <span class="slice-pct">18%</span>
-                <span class="slice-eur">9,00 €</span>
-              </div>
-            </div>
-            <div class="price-slice" style="--color:var(--amber); --pct:12%"
-                 onmouseenter="showPriceInfo('Transport & Logistik', '12%', '6,00 €', 'Containerschiff, LKW, Zoll, Lagerung weltweit')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar"></div>
-              <div class="slice-info">
-                <span class="slice-who">Transport</span>
-                <span class="slice-pct">12%</span>
-                <span class="slice-eur">6,00 €</span>
-              </div>
-            </div>
-            <div class="price-slice price-slice-workers" style="--color:var(--sage-dark); --pct:3%"
-                 onmouseenter="showPriceInfo('Arbeitslöhne Konfektionierung', '3%', '1,50 €', 'Der Lohnanteil der Näherinnen und Näher in Bangladesh — für das Nähen, Bügeln, Verpacken der kompletten Jeans')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar slice-bar-highlight"></div>
-              <div class="slice-info">
-                <span class="slice-who">👷 Arbeitslöhne</span>
-                <span class="slice-pct">3%</span>
-                <span class="slice-eur">1,50 €</span>
-              </div>
-            </div>
-            <div class="price-slice" style="--color:var(--beige-mid); --pct:2%"
-                 onmouseenter="showPriceInfo('Steuern & Sonstiges', '2%', '1,00 €', 'Importzölle, sonstige Abgaben')"
-                 onmouseleave="hidePriceInfo()">
-              <div class="slice-bar"></div>
-              <div class="slice-info">
-                <span class="slice-who">Steuern etc.</span>
-                <span class="slice-pct">2%</span>
-                <span class="slice-eur">1,00 €</span>
-              </div>
-            </div>
-          </div>
-          <div class="price-info-panel" id="price-info">
-            <p>← Hover für Details zu jedem Anteil</p>
-          </div>
+<!-- KAPITEL 6: DIE BILANZ -->
+<section class="chapter" id="chapter-6">
+  <div class="chapter-header">
+    <span class="chapter-number">06</span>
+    <div>
+      <h2 class="chapter-title">Die Bilanz</h2>
+      <p class="chapter-location">Von der Erde zurück zur Erde</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>CO₂-Fußabdruck einer Jeans</h3>
+    <p class="card-sub">Anteile am Gesamtwert von 33,4 kg CO₂-Äquivalent — vom Feld bis zur Entsorgung</p>
+
+    <div class="co2-donut-layout">
+      <div class="co2-donut-wrap">
+        <svg viewBox="0 0 120 120" id="co2-donut"></svg>
+        <div class="co2-donut-center">
+          <div class="co2-donut-icon">👖</div>
+          <div class="co2-donut-value">33,4 kg</div>
+          <div class="co2-donut-label">CO₂-Äquivalent</div>
         </div>
       </div>
+      <div class="co2-donut-legend" id="co2-legend"></div>
+    </div>
 
-      <div class="contrast-block">
-        <div class="contrast-item contrast-left">
-          <div class="contrast-number">1,50 €</div>
-          <div class="contrast-desc">Lohnanteil der Näherin für JeansUnstitcheds Herstellung</div>
-        </div>
-        <div class="contrast-vs">VS</div>
-        <div class="contrast-item contrast-right">
-          <div class="contrast-number">49,99 €</div>
-          <div class="contrast-desc">Was du in Würzburg dafür bezahlst</div>
-        </div>
+    <div class="co2-insight">
+      <strong>Überraschend?</strong> Nicht die Fabrik, sondern dein eigener Kleiderschrank verursacht den größten Anteil: Waschen und Trocknen über die gesamte Tragezeit macht mit 37% (12,5 kg) mehr aus als Baumwollanbau, Nähen und Transport zusammen.
+    </div>
+
+    <p class="chart-note">Quelle: Levi Strauss &amp; Co., "The Life Cycle of a Jean" (2015), ISO-14040/44-konforme Lebenszyklusanalyse der Levi's® 501®.</p>
+  </div>
+
+  <div class="card">
+    <h3>Jeans-Gesamtbilanz</h3>
+    <p class="card-sub">Die wichtigsten Zahlen der gesamten Reise auf einen Blick</p>
+
+    <div class="balance-grid">
+      <div class="balance-tile">
+        <div class="balance-icon">💧</div>
+        <div class="balance-value">~8.000 L</div>
+        <div class="balance-label">Wasser (Baumwollanbau)</div>
       </div>
-
-      <!-- GÜTESIEGEL VERGLEICH -->
-      <div class="card">
-        <h3>Was bedeuten Gütesiegel?</h3>
-        <div class="label-grid">
-          <div class="label-item label-strong">
-            <div class="label-badge">GOTS</div>
-            <div class="label-name">Global Organic Textile Standard</div>
-            <div class="label-desc">Strengste Zertifizierung: Bio-Baumwolle + soziale Standards + Chemikalienverbote. Unangekündigte Kontrollen.</div>
-            <div class="label-rating">★★★★★</div>
-          </div>
-          <div class="label-item label-mid">
-            <div class="label-badge">Fair Trade</div>
-            <div class="label-name">Fairtrade Textil</div>
-            <div class="label-desc">Mindestpreise und Fairtrade-Prämien für Kooperativen. Soziale Standards, aber kein Chemikalienverbot.</div>
-            <div class="label-rating">★★★★☆</div>
-          </div>
-          <div class="label-item label-mid">
-            <div class="label-badge">Bluesign</div>
-            <div class="label-name">Bluesign Standard</div>
-            <div class="label-desc">Fokus auf Chemikalien und Ressourceneffizienz. Gut für Umwelt, schwächer bei sozialen Aspekten.</div>
-            <div class="label-rating">★★★☆☆</div>
-          </div>
-          <div class="label-item label-weak">
-            <div class="label-badge">„Eco"</div>
-            <div class="label-name">Eigenmarken-Label</div>
-            <div class="label-desc">Selbst vergeben, keine unabhängige Kontrolle. Greenwashing-Risiko hoch.</div>
-            <div class="label-rating">★☆☆☆☆</div>
-          </div>
-        </div>
+      <div class="balance-tile">
+        <div class="balance-icon">🌍</div>
+        <div class="balance-value">33,4 kg</div>
+        <div class="balance-label">CO₂-Äquivalent</div>
+      </div>
+      <div class="balance-tile">
+        <div class="balance-icon">🏭</div>
+        <div class="balance-value">5</div>
+        <div class="balance-label">Produktionsländer</div>
+      </div>
+      <div class="balance-tile">
+        <div class="balance-icon">🚢</div>
+        <div class="balance-value">~25.800 km</div>
+        <div class="balance-label">Gesamtstrecke</div>
+      </div>
+      <div class="balance-tile">
+        <div class="balance-icon">👷</div>
+        <div class="balance-value">1,50 €</div>
+        <div class="balance-label">Lohnanteil Näherin (von 49,99 €)</div>
+      </div>
+      <div class="balance-tile">
+        <div class="balance-icon">♻️</div>
+        <div class="balance-value">&lt; 1%</div>
+        <div class="balance-label">wird zu neuer Kleidung recycelt</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CHAPTER 6: BILANZ -->
-  <section class="chapter chapter-final" id="chapter-6">
-    <div class="chapter-header">
-      <span class="chapter-number">06</span>
-      <div>
-        <h2 class="chapter-title">Die Bilanz</h2>
-        <p class="chapter-location">Von der Erde zurück zur Erde</p>
+<!-- KAPITEL 7: WAS KANNST DU TUN? -->
+<section class="chapter chapter-final" id="chapter-7">
+  <div class="chapter-header">
+    <span class="chapter-number">07</span>
+    <div>
+      <h2 class="chapter-title">Was kannst du tun?</h2>
+      <p class="chapter-location">📍 Bei dir zu Hause</p>
+    </div>
+  </div>
+
+  <p class="intro-text">Wie wir gesehen haben, tragen auch wir als Nutzer:innen einen großen Teil der Verantwortung für Nachhaltigkeit — nicht nur bei der Kaufentscheidung, sondern auch danach: <strong>Waschen und Trocknen allein verursachen mehr CO₂ als die gesamte Produktion einer Jeans zusammen</strong> (Kapitel 6). Drei Hebel, mit denen ihr wirklich etwas verändern könnt:</p>
+
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <div class="tip-title">Second Hand kaufen</div>
+      <div class="tip-text">
+        Eine gebrauchte Jeans spart die komplette Kette aus Kapitel 1–3 — keine neue Ernte, kein neues Färben, kein neues Nähen. Laut einer Studie von myclimate und Globetrotter verursacht gebrauchte Ausrüstung <strong>bis zu 75–80% weniger CO₂</strong> als neue. Trotzdem kaufen 63% der Deutschen laut Umweltbundesamt niemals gebraucht.
       </div>
     </div>
-    <div class="chapter-content">
-      <div class="text-block">
-        <p class="lead-text">JeansUnstitched wird durchschnittlich <strong>2–3 Jahre</strong> getragen, dann weggeworfen — die meisten Jeans landen nicht im Recycling.</p>
-      </div>
-
-      <!-- LEBENSWEG TIMELINE -->
-      <div class="card">
-        <h3>Das Leben nach dem Kauf</h3>
-        <div class="lifecycle">
-          <div class="lifecycle-item">
-            <div class="lc-icon">👗</div>
-            <div class="lc-year">Jahr 1</div>
-            <div class="lc-text">Regelmäßiges Tragen. Jede Wäsche: 60–70 L Wasser, 0,15 kWh.</div>
-          </div>
-          <div class="lifecycle-item lc-mid">
-            <div class="lc-icon">📦</div>
-            <div class="lc-year">Jahr 2</div>
-            <div class="lc-text">Weniger getragen. Im Schrank vergessen. 73% aller Kleidungsstücke werden kaum noch benutzt.</div>
-          </div>
-          <div class="lifecycle-item">
-            <div class="lc-icon">🗑️</div>
-            <div class="lc-year">Jahr 3</div>
-            <div class="lc-text">Entsorgung. Nur 12% aller Altkleider werden zu neuen Textilien recycelt (Ellen MacArthur Foundation).</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- GESAMTBILANZ -->
-      <div class="final-stats">
-        <h3>JeansUnstitcheds Gesamtbilanz</h3>
-        <div class="final-grid">
-          <div class="final-stat">
-            <div class="final-icon">💧</div>
-            <div class="final-value">~8.000 L</div>
-            <div class="final-label">Wasser (Produktion)</div>
-          </div>
-          <div class="final-stat">
-            <div class="final-icon">🌍</div>
-            <div class="final-value">33 kg</div>
-            <div class="final-label">CO₂-Äquivalent</div>
-          </div>
-          <div class="final-stat">
-            <div class="final-icon">🏭</div>
-            <div class="final-value">4+</div>
-            <div class="final-label">Produktionsländer</div>
-          </div>
-          <div class="final-stat">
-            <div class="final-icon">✈️</div>
-            <div class="final-value">8.400 km</div>
-            <div class="final-label">Transportweg</div>
-          </div>
-          <div class="final-stat">
-            <div class="final-icon">👷</div>
-            <div class="final-value">1,50 €</div>
-            <div class="final-label">Lohnanteil Näherin</div>
-          </div>
-          <div class="final-stat">
-            <div class="final-icon">⚗️</div>
-            <div class="final-value">~20</div>
-            <div class="final-label">Chemikalien</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- HANDLUNGSOPTIONEN -->
-      <div class="card card-action">
-        <h3>Was kannst du tun?</h3>
-        <div class="actions-grid">
-          <div class="action-item">
-            <div class="action-num">01</div>
-            <h4>Weniger & länger</h4>
-            <p>Jedes Jahr gewaschenes Kleidungsstück um 9 Monate länger tragen → 20–30% weniger CO₂</p>
-          </div>
-          <div class="action-item">
-            <div class="action-num">02</div>
-            <h4>Second Hand</h4>
-            <p>Gebrauchte Jeans kaufen = kein neues Wasser, kein neues CO₂ für Produktion</p>
-          </div>
-          <div class="action-item">
-            <div class="action-num">03</div>
-            <h4>Auf Labels achten</h4>
-            <p>GOTS, Fair Trade Textil = echte Standards mit unabhängiger Kontrolle</p>
-          </div>
-          <div class="action-item">
-            <div class="action-num">04</div>
-            <h4>Kalt waschen</h4>
-            <p>30°C statt 60°C: 40% weniger Energie. Jeans überleben das genauso gut.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="sources-block">
-        <h4>Quellen & weiterführende Links</h4>
-        <ul>
-          <li><a href="https://cleanclothes.org" target="_blank">Clean Clothes Campaign — Arbeitsbedingungen in der Textilindustrie</a></li>
-          <li><a href="https://comtrade.un.org" target="_blank">UN Comtrade — Globale Handelsstatistiken</a></li>
-          <li><a href="https://ellenmacarthurfoundation.org" target="_blank">Ellen MacArthur Foundation — A New Textiles Economy (2017)</a></li>
-          <li><a href="https://quantis.com" target="_blank">Quantis — Measuring Fashion: Insights from the Environmental Impact (2018)</a></li>
-          <li>European Commission JRC — Environmental Improvement Potential of Textiles (2014)</li>
-        </ul>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <div class="tip-title">Kalt waschen & bewusst kaufen</div>
+      <div class="tip-text">
+        Bei 30°C statt 60°C verbraucht eine Waschmaschine <strong>über 68% weniger Strom</strong>. Wer seltener wäscht, senkt laut Levi's-Studie den Fußabdruck der Nutzung um bis zu 77%. Und wer auf Qualität statt Menge setzt, trägt länger: Schon 9 Monate mehr sparen 20–30% CO₂, Wasser und Abfall (WRAP-Studie).
       </div>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-content">
-      <p class="footer-title">JeansUnstitched</p>
-      <p class="footer-sub">Interaktive Dokumentation · Modul Interaktive Medien</p>
-      <p class="footer-credits">Daten: Clean Clothes Campaign, UN Comtrade, Quantis, Ellen MacArthur Foundation · Visualisierung: D3.js, vanilla JS</p>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <div class="tip-title">Auf Labels achten</div>
+      <div class="tip-text">
+        Nicht jedes Siegel hält, was es verspricht. Echte Standards wie GOTS oder Fairtrade prüfen die komplette Lieferkette samt Löhnen und Chemikalien — reine Schadstoffsiegel prüfen nur das fertige Kleidungsstück, nicht die Produktion. <strong>siegelklarheit.de</strong> der Bundesregierung hilft, echte Standards von Greenwashing zu unterscheiden.
+      </div>
     </div>
-  </footer>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/world-map.js"></script>
-  <script src="js/transport-map.js"></script>
-  <script src="js/main.js"></script>
+  <div class="label-section">
+    <h3 class="section-heading">Was bedeuten Gütesiegel?</h3>
+    <p class="card-sub">Die 6 wichtigsten Textilsiegel im Vergleich — nach Strenge der Kontrolle</p>
+
+    <div class="label-grid">
+      <div class="label-item label-strong">
+        <div class="label-badge">IVN Best</div>
+        <div class="label-name">Naturtextil IVN zertifiziert BEST</div>
+        <div class="label-desc">100% Bio-Naturfasern, keine Synthetik erlaubt, komplette Lieferkette geprüft. Von Greenpeace als strengstes Siegel bewertet.</div>
+        <div class="label-rating">★★★★★</div>
+      </div>
+      <div class="label-item label-strong">
+        <div class="label-badge">GOTS</div>
+        <div class="label-name">Global Organic Textile Standard</div>
+        <div class="label-desc">Mind. 70–95% Bio-Fasern, komplette Lieferkette, ILO-Kernarbeitsnormen. Bekanntestes und am weitesten verbreitetes Öko-Siegel.</div>
+        <div class="label-rating">★★★★★</div>
+      </div>
+      <div class="label-item label-strong">
+        <div class="label-badge">Made in Green</div>
+        <div class="label-name">OEKO-TEX® Made in Green</div>
+        <div class="label-desc">Rückverfolgbarkeit der gesamten Produktionskette plus strenge Schadstoffprüfung. Nicht zu verwechseln mit dem schwächeren "Standard 100".</div>
+        <div class="label-rating">★★★★★</div>
+      </div>
+      <div class="label-item label-mid">
+        <div class="label-badge">Fairtrade</div>
+        <div class="label-name">Fairtrade Textile Production</div>
+        <div class="label-desc">Stärkste Sozialstandards: existenzsichernde Löhne verpflichtend. Bisher aber erst wenige Unternehmen komplett umgesetzt.</div>
+        <div class="label-rating">★★★★<span class="star-empty">★</span></div>
+      </div>
+      <div class="label-item label-mid">
+        <div class="label-badge">Bluesign</div>
+        <div class="label-name">Bluesign Standard</div>
+        <div class="label-desc">Reguliert Chemikalien streng, spart Wasser. Aber: keine Bio-Pflicht, gentechnisch verändertes Saatgut erlaubt, keine ILO-Kontrolle.</div>
+        <div class="label-rating">★★★<span class="star-empty">★★</span></div>
+      </div>
+      <div class="label-item label-mid">
+        <div class="label-badge">Grüner Knopf</div>
+        <div class="label-name">Grüner Knopf (BMZ)</div>
+        <div class="label-desc">Erstes staatliches Textilsiegel. Deckt bisher nur Nähen und Färben ab — nicht den Baumwollanbau. Nur gesetzlicher statt existenzsichernder Lohn.</div>
+        <div class="label-rating">★★★<span class="star-empty">★★</span></div>
+      </div>
+    </div>
+
+    <div class="siegel-note">
+      <strong>Falle im Handel:</strong> Das mit Abstand häufigste Siegel im Handel — OEKO-TEX Standard 100 — schafft es bewusst nicht in diese Top 6: Es prüft ausschließlich Schadstoffe im fertigen Kleidungsstück, nichts zur Produktion, keine Bio-Pflicht, keine Sozialkriterien. Es wird im Handel oft mit dem deutlich strengeren "Made in Green" desselben Prüfkonzerns verwechselt.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <p class="footer-title">JeansUnstitched</p>
+    <p class="footer-sub">Interaktive Dokumentation · Modul Interaktive Medien</p>
+    <p class="footer-credits">Daten &amp; Quellen: siehe Quellenverzeichnis · Visualisierung: natives SVG, vanilla JS</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
 </body>
 </html>
