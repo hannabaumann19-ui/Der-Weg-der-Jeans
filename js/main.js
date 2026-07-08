@@ -134,28 +134,16 @@ window.dataReady.then(() => {
 const barsTriggered = new Set();
 
 function triggerBars(container) {
-  const co2Fills = container.querySelectorAll('.co2-fill');
-  co2Fills.forEach((el, i) => {
+  const energySegs = container.querySelectorAll('.energy-seg');
+  energySegs.forEach((el, i) => {
     if (!barsTriggered.has(el)) {
       barsTriggered.add(el);
-      const targetW = el.style.getPropertyValue('--w') || '0%';
+      const targetW = el.style.width || '0%';
       el.style.width = '0%';
       setTimeout(() => {
+        el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
         el.style.width = targetW;
-      }, 200 + i * 100);
-    }
-  });
-
-  const barFills = container.querySelectorAll('.bar-fill');
-  barFills.forEach((el, i) => {
-    if (!barsTriggered.has(el)) {
-      barsTriggered.add(el);
-      const targetW = el.style.getPropertyValue('--w') || '0%';
-      el.style.width = '0%';
-      setTimeout(() => {
-        el.style.transition = 'width 1s ease ' + (i * 150) + 'ms';
-        el.style.width = targetW;
-      }, 300);
+      }, 250);
     }
   });
 }
@@ -281,7 +269,10 @@ if (aralRange && aralBeforeImg && aralHandle && aralFactText) {
 const photoTooltip = document.getElementById('photo-tooltip');
 const photoWrap = document.getElementById('jeans-photo');
 
-if (photoWrap && photoTooltip) {
+// Wird von data.js aufgerufen, NACHDEM die Hotspots aus Supabase
+// ins DOM geschrieben wurden.
+function bindPhotoHotspots() {
+  if (!photoWrap || !photoTooltip) return;
   document.querySelectorAll('.photo-hotspot').forEach(spot => {
     spot.addEventListener('mouseenter', () => {
       document.querySelectorAll('.photo-hotspot').forEach(s => s.classList.remove('active'));
@@ -307,6 +298,7 @@ if (photoWrap && photoTooltip) {
     });
   });
 }
+window.bindPhotoHotspots = bindPhotoHotspots;
 
 // ============================================
 // KAPITEL 3 — REVEAL-BUTTON (Rana Plaza)
@@ -327,7 +319,6 @@ if (ranaBtn && ranaBox) {
 // FLOW DIAGRAM STEPS
 // ============================================
 
-const flowSteps = document.querySelectorAll('.flow-step');
 const flowInfoBox = document.getElementById('flow-info');
 const flowDiagram = document.getElementById('production-flow');
 
@@ -348,46 +339,50 @@ function scrollFlowStepIntoView(step) {
   }
 }
 
-flowSteps.forEach(step => {
-  step.addEventListener('click', () => {
-    flowSteps.forEach(s => s.classList.remove('active'));
-    step.classList.add('active');
-    if (flowInfoBox && step.dataset.info) {
-      flowInfoBox.textContent = step.dataset.info;
-    }
-    // Angeklickten Schritt automatisch vollständig ins Bild scrollen,
-    // falls er (z.B. Schritt 4) noch abgeschnitten ist.
-    scrollFlowStepIntoView(step);
+// Bindet die Klick-Events auf die Flow-Schritte. Wird von data.js
+// aufgerufen, NACHDEM die Schritte aus Supabase ins DOM geschrieben
+// wurden — vorher existieren die .flow-step-Elemente noch nicht.
+function bindFlowSteps() {
+  const flowSteps = document.querySelectorAll('.flow-step');
+  flowSteps.forEach(step => {
+    step.addEventListener('click', () => {
+      flowSteps.forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+      if (flowInfoBox && step.dataset.info) {
+        flowInfoBox.textContent = step.dataset.info;
+      }
+      scrollFlowStepIntoView(step);
+    });
   });
-});
+}
+window.bindFlowSteps = bindFlowSteps;
 
 // ============================================
-// INSIGHT TOGGLE (Kapitel 2 — Energiekarte)
+// INSIGHT TOGGLE (Glühbirnen-Fakten: Kapitel 2 + 6)
 // ============================================
 
-const insightBtn = document.getElementById('insight-btn');
-const insightContent = document.getElementById('insight-text');
-
-if (insightBtn && insightContent) {
-  insightBtn.addEventListener('click', () => {
-    const isOpen = insightContent.classList.toggle('open');
-    insightBtn.classList.toggle('active', isOpen);
-    insightBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+function initInsightToggle(btnId, contentId) {
+  const btn = document.getElementById(btnId);
+  const content = document.getElementById(contentId);
+  if (!btn || !content) return;
+  btn.addEventListener('click', () => {
+    const isOpen = content.classList.toggle('open');
+    btn.classList.toggle('active', isOpen);
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
 }
 
+initInsightToggle('insight-btn', 'insight-text');
+initInsightToggle('co2-insight-btn', 'co2-insight-text');
+
 // ============================================
 // KAPITEL 5 — PREIS-DONUT
+// Wartet auf window.dataReady, da die Daten aus
+// Supabase (price_breakdown) kommen.
 // ============================================
-(function () {
-  const priceData = [
-    { label: "Einzelhandel",   pct: 40, eur: "20,00 €", color: "var(--navy)" },
-    { label: "Marke / Import", pct: 25, eur: "12,50 €", color: "var(--terracotta)" },
-    { label: "Materialien",    pct: 18, eur: "9,00 €",  color: "var(--beige-dark)", dark: true },
-    { label: "Transport",      pct: 12, eur: "6,00 €",  color: "var(--amber)" },
-    { label: "Arbeitslöhne",   pct: 3,  eur: "1,50 €",  color: "var(--sage-dark)" },
-    { label: "Steuern etc.",   pct: 2,  eur: "1,00 €",  color: "var(--beige-mid)", dark: true },
-  ];
+window.dataReady.then(function () {
+  const priceData = window.priceBreakdownData || [];
+  if (!priceData.length) return;
 
   const svgNS = "http://www.w3.org/2000/svg";
   const ring = document.getElementById("price-donut");
@@ -487,21 +482,16 @@ if (insightBtn && insightContent) {
     seg.addEventListener("mouseenter", () => highlightPriceSeg(parseInt(seg.dataset.index)));
     seg.addEventListener("mouseleave", () => highlightPriceSeg(null));
   });
-})();
+});
 
 // ============================================
 // KAPITEL 6 — CO2-DONUT
+// Wartet auf window.dataReady, da die Daten aus
+// Supabase (co2_breakdown) kommen.
 // ============================================
-(function () {
-  const co2Data = [
-    { label: "Nutzung (Waschen/Trocknen)", pct: 37, kg: 12.5, color: "var(--terracotta)", highlight: true },
-    { label: "Spinnen & Weben",            pct: 27, kg: 9.0,  color: "var(--navy)" },
-    { label: "Baumwollanbau",              pct: 11, kg: 3.8,  color: "var(--sage)" },
-    { label: "Nähen & Veredeln",           pct: 9,  kg: 2.9,  color: "var(--sage-dark)" },
-    { label: "Transport & Handel",         pct: 8,  kg: 2.6,  color: "var(--amber)" },
-    { label: "Zubehör & Verpackung",       pct: 5,  kg: 1.7,  color: "var(--beige-dark)" },
-    { label: "Entsorgung",                 pct: 3,  kg: 0.9,  color: "var(--beige-mid)" },
-  ];
+window.dataReady.then(function () {
+  const co2Data = window.co2BreakdownData || [];
+  if (!co2Data.length) return;
 
   const svg = document.getElementById("co2-donut");
   const legendEl = document.getElementById("co2-legend");
@@ -555,7 +545,7 @@ if (insightBtn && insightContent) {
     seg.addEventListener("mouseenter", () => highlightSeg(parseInt(seg.dataset.index)));
     seg.addEventListener("mouseleave", () => highlightSeg(null));
   });
-})();
+});
 
 // ============================================
 // KEYBOARD ACCESSIBILITY FOR CHAPTER NAVIGATION
