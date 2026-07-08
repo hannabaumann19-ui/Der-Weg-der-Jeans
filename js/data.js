@@ -1,452 +1,441 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JeansUnstitched — Die Reise einer Jeans</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+/* ============================================
+   JEANSUNSTITCHED — Datenanbindung (Supabase)
+   Lädt alle Inhalte aus der Datenbank und
+   schreibt sie ins DOM, bevor main.js startet.
+   ============================================ */
 
-  <!-- NAVIGATION -->
-  <nav id="main-nav">
-    <div class="nav-logo">JeansUnstitched</div>
-    <div class="nav-progress">
-      <div class="nav-progress-bar" id="progress-bar"></div>
-    </div>
-    <div class="nav-chapters">
-      <button class="chapter-dot active" data-target="chapter-1" title="Baumwolle">1</button>
-      <button class="chapter-dot" data-target="chapter-2" title="Spinnen & Weben">2</button>
-      <button class="chapter-dot" data-target="chapter-3" title="Vom Stoff zur Jeans">3</button>
-      <button class="chapter-dot" data-target="chapter-4" title="Transport">4</button>
-      <button class="chapter-dot" data-target="chapter-5" title="Im Laden">5</button>
-      <button class="chapter-dot" data-target="chapter-6" title="Die Bilanz">6</button>
-      <button class="chapter-dot" data-target="chapter-7" title="Was kannst du tun?">7</button>
-    </div>
-  </nav>
+'use strict';
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <p class="hero-eyebrow">Eine Dokumentation in 7 Kapiteln</p>
-      <h1 class="hero-title">Jeans<em>Unstitched</em></h1>
-      <p class="hero-subtitle"><strong>Die globale Reise einer Jeans</strong><br>Von der Baumwollernte bis zu deinem Kleiderschrank</p>
-      <div class="hero-stats">
-        <div class="stat-pill">
-          <div class="stat-pill-value">
-            <span class="stat-num" data-count="25800">0</span><span class="stat-unit">km</span>
-          </div>
-          <span class="stat-label">Transportweg</span>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-pill-value">
-            <span class="stat-num" data-count="8000">0</span><span class="stat-unit">L</span>
-          </div>
-          <span class="stat-label">Wasserverbrauch</span>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-pill-value">
-            <span class="stat-num" data-count="33">0</span><span class="stat-unit">kg</span>
-          </div>
-          <span class="stat-label">CO₂ Fußabdruck</span>
-        </div>
-      </div>
-      <button class="cta-button" onclick="scrollToChapter('chapter-1')">
-        Reise beginnen ↓
-      </button>
-    </div>
-  </section>
+// ⚠️ Hier eure eigenen Werte eintragen (aus Project Settings → API):
+const SUPABASE_URL = 'https://jrpethjnhpkccgyrnrak.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_5p71UNcnrkXHBZiennMYJA_8QB0gM97';
 
-  <!-- CHAPTER 1: BAUMWOLLE -->
-  <section class="chapter" id="chapter-1">
-    <div class="chapter-header">
-      <span class="chapter-number">01</span>
-      <div>
-        <h2 class="chapter-title">Baumwollernte</h2>
-        <p class="chapter-location">📍 Indien · China · USA · Pakistan · Türkei · Usbekistan · Turkmenistan</p>
-      </div>
-    </div>
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <div class="chapter-content">
-      <!-- STAT CARDS -->
-      <div class="stats-grid">
-        <div class="stat-card stat-land">
-          <div class="stat-icon">🌱</div>
-          <div class="stat-value counter" data-target="800">0</div>
-          <div class="stat-unit">Gramm</div>
-          <div class="stat-desc">Baumwollfaser pro Jeans</div>
-          <div class="stat-compare">≈ 3 ausgewachsene Baumwollpflanzen</div>
-        </div>
-        <div class="stat-card stat-workers">
-          <div class="stat-icon">👤</div>
-          <div class="stat-value">250 Mio.</div>
-          <div class="stat-unit">Menschen</div>
-          <div class="stat-desc">leben weltweit vom Baumwollanbau</div>
-          <div class="stat-compare">~65% davon Kleinbauernfamilien</div>
-        </div>
-        <div class="stat-card stat-water">
-          <div class="stat-icon">💧</div>
-          <div class="stat-value counter" data-target="8000">0</div>
-          <div class="stat-unit">Liter</div>
-          <div class="stat-desc">Wasser für die Baumwolle einer Jeans</div>
-          <div class="stat-compare">= 80 volle Badewannen</div>
-        </div>
-      </div>
+// Wird von main.js/content-render.js genutzt, um zu warten, bis
+// wirklich alle Supabase-Daten geladen sind, bevor irgendetwas
+// gezeichnet, animiert oder befüllt wird.
+window.dataReady = new Promise(async (resolve) => {
+  try {
+    await Promise.all([
+      loadHeroStats(),
+      loadStatCards('chapter1', '#chapter-1 .stats-grid .stat-card'),
+      loadStatCards('chapter3', '#chapter-3 .stats-grid .stat-card'),
+      loadCottonRegions(),
+      loadTransportData(),
+      loadContentBlocks(),
+      loadMemorialEvent(),
+      loadPhotoHotspots(),
+      loadProductionSteps(),
+      loadEnergyConsumption(),
+      loadPriceBreakdown(),
+      loadCo2Breakdown(),
+      loadBalanceTiles(),
+      loadActionTips(),
+      loadCertifications(),
+      loadSources(),
+    ]);
+  } catch (err) {
+    console.error('Fehler beim Laden der Daten aus Supabase:', err);
+  }
+  resolve();
+});
 
-      <div class="text-block">
-        <p data-content-key="chapter1-p1">Für die Herstellung einer einzigen Jeans werden ca. 800 Gramm Baumwollfaser verwendet. Für den Anbau und die Bewässerung dieser Menge Baumwolle werden durchschnittlich 8.000 Liter Wasser benötigt.</p>
-        <p data-content-key="chapter1-p2">Baumwolle ist durstig und wächst am liebsten dort, wo Wasser ohnehin knapp ist. Ort des Anbaus und Art der Bewässerung entscheiden dabei maßgeblich darüber, wie viel Wasser tatsächlich verbraucht wird. Beispielsweise wird für die Baumwoll-Bewässerung in Indien fast das Vierfache an Wasser benötigt wie in den USA.</p>
-      </div>
+// ============================================
+// HERO STATS (die drei Pillen ganz oben)
+// ============================================
+async function loadHeroStats() {
+  const { data, error } = await supabaseClient
+    .from('stats')
+    .select('*')
+    .eq('section', 'hero')
+    .order('order_index');
 
-      <!-- WASSERKARTE -->
-      <div class="card">
-        <div class="card-header">
-          <h3>Wasserverbrauch des Baumwollanbaus und woher kommt sie eigentlich?</h3>
-        </div>
-        <div class="water-map" id="cotton-map" data-loading="true">
-          <p class="map-loading-text">Karte wird geladen …</p>
-        </div>
-        <!-- Tooltip -->
-        <div class="map-tooltip" id="map-tooltip"></div>
-      </div>
+  if (error) { console.error(error); return; }
 
-      <!-- ARALSEE VORHER/NACHHER -->
-      <div class="card card-dark aral-card">
-        <div class="card-header">
-          <h3>Der Preis des Wassers am Beispiel des Aralsees</h3>
-        </div>
+  const pills = document.querySelectorAll('.hero-stats .stat-pill');
+  data.forEach((row, i) => {
+    const pill = pills[i];
+    if (!pill) return;
+    pill.querySelector('.stat-num').dataset.target = row.value.replace(/\./g, '');
+    pill.querySelector('.stat-unit').textContent = row.unit;
+    pill.querySelector('.stat-label').textContent = row.label;
+  });
+}
 
-        <div class="aral-slider" id="aral-slider">
-          <div class="aral-image aral-image-after" style="background-image:url('assets/aral-nachher.jpg')"></div>
-          <div class="aral-image aral-image-before" id="aral-before-img" style="background-image:url('assets/aral-frueher.jpg')"></div>
+// ============================================
+// STAT-CARDS (generisch — Kapitel 1 & Kapitel 3
+// haben identische Kartenstruktur)
+// ============================================
+async function loadStatCards(section, containerSelector) {
+  const { data, error } = await supabaseClient
+    .from('stats')
+    .select('*')
+    .eq('section', section)
+    .order('order_index');
 
-          <span class="aral-tag aral-tag-before">Früher</span>
-          <span class="aral-tag aral-tag-after">Heute</span>
+  if (error) { console.error(error); return; }
 
-          <div class="aral-handle" id="aral-handle">
-            <span class="aral-handle-line"></span>
-            <span class="aral-handle-circle">↔</span>
-          </div>
+  const cards = document.querySelectorAll(containerSelector);
+  data.forEach((row, i) => {
+    const card = cards[i];
+    if (!card) return;
+    const valueEl = card.querySelector('.stat-value');
+    if (valueEl.classList.contains('counter')) {
+      valueEl.dataset.target = row.value.replace(/\D/g, '');
+    } else {
+      valueEl.textContent = row.value;
+    }
+    const unitEl = card.querySelector('.stat-unit');
+    if (unitEl) unitEl.textContent = row.unit;
+    const descEl = card.querySelector('.stat-desc');
+    if (descEl) descEl.innerHTML = row.label;
+    const compareEl = card.querySelector('.stat-compare');
+    if (compareEl && row.comparison) compareEl.textContent = row.comparison;
+  });
+}
 
-          <input type="range" class="aral-range" id="aral-range" min="0" max="100" value="92"
-                 aria-label="Vergleich Aralsee: früher und heute — Regler ziehen">
-        </div>
-        <p class="aral-hint">← Regler ziehen, um die Veränderung zu sehen</p>
+// ============================================
+// WASSERKARTE (Kapitel 1) — Baumwoll-Anbauländer
+// world-map.js liest diese Daten, sobald window.dataReady
+// aufgelöst ist — hier wird nur geladen, nicht gezeichnet.
+// ============================================
+window.cottonRegionsData = [];
 
-        <p class="aral-fact-text" id="aral-fact-text">Der Aralsee war einst das viertgrößte Binnenmeer der Welt, größer als Bayern und Baden-Württemberg zusammen. Ab den 1960er-Jahren wurden seine Zuflüsse systematisch für die Bewässerung riesiger Baumwollplantagen in Usbekistan umgeleitet.</p>
-      </div>
+async function loadCottonRegions() {
+  const { data, error } = await supabaseClient
+    .from('cotton_regions')
+    .select('*')
+    .order('order_index');
 
-    </div>
-  </section>
+  if (error) { console.error(error); return; }
+  window.cottonRegionsData = data;
+}
 
-  <!-- CHAPTER 2: SPINNEN & WEBEN -->
-  <section class="chapter" id="chapter-2">
-    <div class="chapter-header">
-      <span class="chapter-number">02</span>
-      <div>
-        <h2 class="chapter-title">Spinnen & Weben</h2>
-        <p class="chapter-location">📍 Bangladesh · Pakistan · China</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <!-- FLUSSDIAGRAMM PRODUKTIONSPROZESS -->
-      <div class="card">
-        <h3>Von der Faser zum Stoff</h3>
-        <p class="card-sub">Vier Schritte, vier Länder, ein Gewebe — klicke auf einen Schritt für Details</p>
+// ============================================
+// TRANSPORTKARTE (Kapitel 4) — Wegpunkte & Segmente
+// transport-map.js liest diese Daten, sobald
+// window.dataReady aufgelöst ist.
+// ============================================
+window.transportWaypointsData = [];
+window.transportStepsData = [];
 
-        <div class="flow-diagram" id="production-flow">
-          <p class="map-loading-text">Lädt …</p>
-        </div>
+async function loadTransportData() {
+  const [waypointsRes, stepsRes] = await Promise.all([
+    supabaseClient.from('transport_waypoints').select('*').order('order_index'),
+    supabaseClient.from('transport_steps').select('*').order('order_index')
+  ]);
 
-        <div class="flow-info-box" id="flow-info">← Klicke auf einen Schritt für Details</div>
-      </div>
+  if (waypointsRes.error) { console.error(waypointsRes.error); }
+  else { window.transportWaypointsData = waypointsRes.data; }
 
-      <!-- ENERGIE-INTENSITÄT -->
-      <div class="card">
-        <h3>Wo die Energie hingeht</h3>
-        <p class="card-sub">Anteil an der gesamten Fertigungsenergie von Faser bis fertigem Stoff</p>
+  if (stepsRes.error) { console.error(stepsRes.error); }
+  else { window.transportStepsData = stepsRes.data; }
+}
 
-        <div class="energy-chart">
-          <div class="energy-legend"></div>
+// ============================================
+// FREITEXT-BLÖCKE (Fließtexte über alle Kapitel verteilt)
+// Wird direkt hier ins DOM geschrieben (Elemente mit
+// data-content-key="..." im HTML).
+// ============================================
+async function loadContentBlocks() {
+  const { data, error } = await supabaseClient
+    .from('content_blocks')
+    .select('*');
 
-          <div class="energy-segbar" role="img"></div>
+  if (error) { console.error(error); return; }
 
-          <div class="insight-toggle">
-            <button class="insight-icon-btn" id="insight-btn" type="button" aria-expanded="false" aria-controls="insight-text" title="Überraschender Fakt">💡</button>
-            <div class="insight-content" id="insight-text">
-              <div class="insight-content-clip">
-                <div class="insight-inner" data-content-key="chapter2-insight">
-                  <strong>Überraschend?</strong> Nicht das Weben, sondern das <strong>Spinnen verbraucht mit Abstand am meisten Energie</strong> — fast die Hälfte der gesamten Fertigungsenergie von Faser zu Stoff.
-                </div>
-              </div>
-            </div>
-          </div>
+  const map = {};
+  data.forEach(row => { map[row.key] = row.content; });
+  window.contentBlocks = map;
 
-          <div class="forward-link">
-            <span class="arrow">→</span>
-            <span data-content-key="chapter2-forward-link">Diese Energie steckt später mit in der <strong>CO₂-Bilanz einer Jeans</strong> (Kapitel 6).</span>
-          </div>
-        </div>
-      </div>
+  document.querySelectorAll('[data-content-key]').forEach(el => {
+    const key = el.dataset.contentKey;
+    if (map[key]) el.innerHTML = map[key];
+  });
+}
 
-    </div>
-  </section>
+// ============================================
+// MEMORIAL-BOX (Kapitel 3 — Rana Plaza)
+// ============================================
+async function loadMemorialEvent() {
+  const { data, error } = await supabaseClient
+    .from('memorial_events')
+    .select('*')
+    .eq('key', 'rana-plaza')
+    .maybeSingle();
 
-  <!-- CHAPTER 3: VOM STOFF ZUR JEANS -->
-  <section class="chapter" id="chapter-3">
-    <div class="chapter-header">
-      <span class="chapter-number">03</span>
-      <div>
-        <h2 class="chapter-title">Vom Stoff zur Jeans</h2>
-        <p class="chapter-location">📍 Dhaka, Bangladesch</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">🧵</div>
-          <div class="stat-value">120</div>
-          <div class="stat-unit">Arbeitsschritte</div>
-          <div class="stat-desc">für eine einzige Jeans, vom Zuschnitt bis zur fertigen Hose</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-value">4 Mio.+</div>
-          <div class="stat-unit">Beschäftigte</div>
-          <div class="stat-desc">in Bangladeschs Bekleidungsindustrie, ~70% Frauen</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">💶</div>
-          <div class="stat-value">106 €</div>
-          <div class="stat-unit">Monatslohn</div>
-          <div class="stat-desc">seit Dez. 2023 — zuvor 68 € seit 2018</div>
-        </div>
-      </div>
+  if (error) { console.error(error); return; }
+  if (!data) return;
 
-      <p class="body-text" data-content-key="chapter3-body">Der fertige Denim-Stoff — blau außen, weiß innen — reist weiter nach Bangladesch. Hier wird aus einer Stoffbahn eine Hose.</p>
+  const box = document.getElementById('rana-box');
+  if (!box) return;
+  const img = box.querySelector('.memorial-img');
+  if (img && data.image_path) {
+    img.src = data.image_path;
+  }
+  const dateEl = box.querySelector('.memorial-date');
+  if (dateEl) dateEl.textContent = data.date_label;
+  const titleEl = box.querySelector('.memorial-title');
+  if (titleEl) titleEl.textContent = data.title;
+  const textEl = box.querySelector('.memorial-text');
+  if (textEl) textEl.innerHTML = data.body;
+}
 
-      <button class="reveal-btn" id="rana-btn" type="button" aria-expanded="false" aria-controls="rana-box">Erfahre mehr</button>
-      <div class="reveal-content" id="rana-box">
-        <div class="reveal-content-clip">
-          <div class="memorial-box">
-            <img class="memorial-img" src="assets/rana-plaza.jpg" alt="Rettungskräfte und Angehörige am eingestürzten Rana-Plaza-Gebäude in Savar, Bangladesch">
-            <div class="memorial-body">
-              <div class="memorial-date">24. April 2013 — Savar, bei Dhaka</div>
-              <div class="memorial-title">Rana Plaza</div>
-              <div class="memorial-text">
-                Ein achtstöckiges Fabrikgebäude stürzt ein — <strong>1.135 Menschen sterben, 2.438 werden verletzt.</strong>
-                Anschließend protestieren Hunderttausende Textilarbeiter gegen ihre miserablen Arbeitsbedingungen.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+// ============================================
+// PHOTO-HOTSPOTS (Kapitel 3 — Used-Look)
+// ============================================
+window.photoHotspotsData = [];
 
-      <div class="photo-hotspot-card">
-        <h3>Der künstliche Used-Look – gefährliche Techniken</h3>
-        <p class="card-sub">Neue Jeans sollen oft aussehen, als wären sie schon Jahre alt. Bewege die Maus über die drei Punkte und erfahre mehr zu den teilweise riskanten Techniken Chemisches Bleichen, Sandstrahlen und Stonewashing.</p>
-        <div class="photo-hotspot-wrap" id="jeans-photo">
-          <div class="photo-tooltip" id="photo-tooltip"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+async function loadPhotoHotspots() {
+  const { data, error } = await supabaseClient
+    .from('photo_hotspots')
+    .select('*')
+    .order('order_index');
 
-  <!-- CHAPTER 4: TRANSPORT -->
-  <section class="chapter" id="chapter-4">
-    <div class="chapter-header">
-      <span class="chapter-number">04</span>
-      <div>
-        <h2 class="chapter-title">Die globale Reise</h2>
-        <p class="chapter-location">📍 Usbekistan → Pakistan → China → Bangladesch → Deutschland</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <div class="text-block">
-        <p data-content-key="chapter4-lead">Fertig genäht, verpackt und auf ein Containerschiff verladen: JeansUnstitched hat da schon eine lange Reise hinter sich — von der Baumwollernte in Usbekistan bis ins Regal in Würzburg sind es insgesamt rund 25.800 Kilometer.</p>
-      </div>
+  if (error) { console.error(error); return; }
+  window.photoHotspotsData = data;
 
-      <!-- TRANSPORTKARTE -->
-      <div class="card card-transport">
-        <h3>Die globale Reise — von der Baumwolle bis Würzburg</h3>
-        <p class="card-sub">Ein beispielhafter, plausibler Weg entlang der größten Produktions- und Handelszentren</p>
+  const wrap = document.getElementById('jeans-photo');
+  if (!wrap) return;
+  wrap.querySelectorAll('.photo-hotspot').forEach(el => el.remove());
 
-        <div id="transport-map-container" data-loading="true"></div>
+  const tooltipEl = document.getElementById('photo-tooltip');
+  data.forEach(spot => {
+    const el = document.createElement('div');
+    el.className = 'photo-hotspot';
+    el.style.left = spot.x_pct + '%';
+    el.style.top = spot.y_pct + '%';
+    el.dataset.tooltip = spot.info;
+    wrap.insertBefore(el, tooltipEl);
+  });
 
-        <div class="map-controls">
-          <button class="btn-animate" id="transport-play-btn" type="button">▶ Route abspielen</button>
-        </div>
+  if (window.bindPhotoHotspots) window.bindPhotoHotspots();
+}
 
-        <div class="transport-legend" id="transport-legend">
-          <div class="transport-legend-item" data-legend-cat="cotton"><span class="transport-legend-dot dot-cotton"></span>Baumwollernte</div>
-          <div class="transport-legend-item" data-legend-cat="spinweb"><span class="transport-legend-dot dot-spinweb"></span>Spinnen &amp; Weben</div>
-          <div class="transport-legend-item" data-legend-cat="sewing"><span class="transport-legend-dot dot-sewing"></span>Nähen</div>
-          <div class="transport-legend-item" data-legend-cat="transport"><span class="transport-legend-dot dot-transport"></span>Transport</div>
-        </div>
+// ============================================
+// PRODUCTION_STEPS (Kapitel 2 — Flow-Diagramm)
+// ============================================
+async function loadProductionSteps() {
+  const { data, error } = await supabaseClient
+    .from('production_steps')
+    .select('*')
+    .order('order_index');
 
-        <div class="map-info-box" id="transport-map-info">← Klicke auf einen Punkt, fahre über eine Strecke, oder starte die Animation</div>
+  if (error) { console.error(error); return; }
 
-        <div class="total-stats">
-          <div class="total-stat">
-            <div class="total-stat-val" id="transport-total-km">~25.800 km</div>
-            <div class="total-stat-label">Gesamtstrecke</div>
-          </div>
-        </div>
-      </div>
+  const flow = document.getElementById('production-flow');
+  const infoBox = document.getElementById('flow-info');
+  if (!flow) return;
 
-    </div>
-  </section>
+  flow.innerHTML = '';
+  data.forEach((step, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('div');
+      arrow.className = 'flow-arrow';
+      arrow.textContent = '→';
+      flow.appendChild(arrow);
+    }
+    const stepEl = document.createElement('div');
+    stepEl.className = 'flow-step' + (i === 0 ? ' active' : '');
+    stepEl.dataset.info = step.info;
+    stepEl.innerHTML = `
+      <div class="flow-num">${step.step_num}</div>
+      <div class="flow-icon">${step.icon}</div>
+      <div class="flow-label">${step.label}</div>
+      <div class="flow-loc">${step.loc}</div>
+      <div class="flow-sub">${step.sub}</div>
+    `;
+    flow.appendChild(stepEl);
+  });
 
-  <!-- KAPITEL 5: IM LADEN -->
-  <section class="chapter" id="chapter-5">
-    <div class="chapter-header">
-      <span class="chapter-number">05</span>
-      <div>
-        <h2 class="chapter-title">Im Laden</h2>
-        <p class="chapter-location">📍 Würzburg, Deutschland</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <p class="body-text" data-content-key="chapter5-body">Die Gewinnverteilung in der Modeindustrie ist extrem ungleich.</p>
+  if (infoBox && data.length) infoBox.textContent = data[0].info;
 
-      <div class="card">
-        <h3>Wer bekommt was vom Preis?</h3>
-        <p class="card-sub">Aufteilung eines beispielhaften Verkaufspreises von 49,99 €</p>
+  if (window.bindFlowSteps) window.bindFlowSteps();
+}
 
-        <div class="price-donut-layout">
-          <div class="price-donut-wrap">
-            <svg viewBox="-20 -20 160 160" overflow="visible">
-              <g class="price-donut-ring" id="price-donut"></g>
-              <g id="price-labels"></g>
-            </svg>
-            <div class="price-donut-center">
-              <div class="price-donut-value">49,99 €</div>
-              <div class="price-donut-label">Verkaufspreis</div>
-            </div>
-          </div>
-          <div class="price-donut-legend" id="price-legend"></div>
-        </div>
+// ============================================
+// ENERGY_CONSUMPTION (Kapitel 2 — Energie-Balken)
+// ============================================
+async function loadEnergyConsumption() {
+  const { data, error } = await supabaseClient
+    .from('energy_consumption')
+    .select('*')
+    .order('order_index');
 
-        <div class="wage-compare">
-          <div class="wage-compare-item wage">
-            <div class="wage-compare-num">1,50 €</div>
-            <div class="wage-compare-desc">Lohnanteil der Näherin für die Herstellung der Jeans</div>
-          </div>
-          <div class="wage-compare-vs">VS</div>
-          <div class="wage-compare-item price">
-            <div class="wage-compare-num">49,99 €</div>
-            <div class="wage-compare-desc">Was du in Würzburg dafür bezahlst</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  if (error) { console.error(error); return; }
 
-  <!-- KAPITEL 6: DIE BILANZ -->
-  <section class="chapter" id="chapter-6">
-    <div class="chapter-header">
-      <span class="chapter-number">06</span>
-      <div>
-        <h2 class="chapter-title">Die Bilanz</h2>
-        <p class="chapter-location">Von der Erde zurück zur Erde</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <div class="card">
-        <h3>CO₂-Fußabdruck einer Jeans</h3>
-        <p class="card-sub">Anteile am Gesamtwert von 33,4 kg CO₂-Äquivalent — vom Feld bis zur Entsorgung</p>
+  const legend = document.querySelector('.energy-legend');
+  const bar = document.querySelector('.energy-segbar');
+  if (!legend || !bar) return;
 
-        <div class="co2-donut-layout">
-          <div class="co2-donut-wrap">
-            <svg viewBox="0 0 120 120" id="co2-donut"></svg>
-            <div class="co2-donut-center">
-              <div class="co2-donut-icon">👖</div>
-              <div class="co2-donut-value">33,4 kg</div>
-              <div class="co2-donut-label">CO₂-Äquivalent</div>
-            </div>
-          </div>
-          <div class="co2-donut-legend" id="co2-legend"></div>
-        </div>
+  legend.innerHTML = '';
+  bar.innerHTML = '';
+  let ariaLabel = 'Energieverteilung: ';
 
-        <div class="insight-toggle">
-          <button class="insight-icon-btn" id="co2-insight-btn" type="button" aria-expanded="false" aria-controls="co2-insight-text" title="Überraschender Fakt">💡</button>
-          <div class="insight-content" id="co2-insight-text">
-            <div class="insight-content-clip">
-              <div class="insight-inner" data-content-key="chapter6-insight">
-                <strong>Überraschend?</strong> Nicht die Fabrik, sondern dein eigener Kleiderschrank verursacht den größten Anteil.
-              </div>
-            </div>
-          </div>
-        </div>
+  data.forEach(seg => {
+    const legendItem = document.createElement('div');
+    legendItem.className = 'energy-legend-item';
+    legendItem.innerHTML = `<span class="energy-dot ${seg.category_key}"></span>${seg.label} — ${seg.pct}%`;
+    legend.appendChild(legendItem);
 
-        <p class="chart-note" data-content-key="chapter6-chart-note">Quelle: Levi Strauss &amp; Co., "The Life Cycle of a Jean" (2015).</p>
-      </div>
+    const segEl = document.createElement('div');
+    segEl.className = 'energy-seg ' + seg.category_key;
+    segEl.style.width = seg.pct + '%';
+    segEl.textContent = seg.pct >= 10 ? seg.pct + '%' : '';
+    bar.appendChild(segEl);
 
-      <div class="card">
-        <h3>Jeans-Gesamtbilanz</h3>
-        <p class="card-sub">Die wichtigsten Zahlen der gesamten Reise auf einen Blick</p>
+    ariaLabel += `${seg.label} ${seg.pct}%, `;
+  });
+  bar.setAttribute('aria-label', ariaLabel.replace(/, $/, ''));
+}
 
-        <div class="balance-grid"></div>
-      </div>
-    </div>
-  </section>
+// ============================================
+// PRICE_BREAKDOWN (Kapitel 5 — Preis-Donut)
+// Wird als Daten-Array bereitgestellt; main.js
+// zeichnet daraus das SVG-Donut-Diagramm.
+// ============================================
+window.priceBreakdownData = [];
 
-  <!-- KAPITEL 7: WAS KANNST DU TUN? -->
-  <section class="chapter chapter-final" id="chapter-7">
-    <div class="chapter-header">
-      <span class="chapter-number">07</span>
-      <div>
-        <h2 class="chapter-title">Was kannst du tun?</h2>
-        <p class="chapter-location">📍 Bei dir zu Hause</p>
-      </div>
-    </div>
-    <div class="chapter-content">
-      <p class="intro-text" data-content-key="chapter7-intro">Wie wir gesehen haben, tragen auch wir als Nutzer:innen einen großen Teil der Verantwortung für Nachhaltigkeit.</p>
+async function loadPriceBreakdown() {
+  const { data, error } = await supabaseClient
+    .from('price_breakdown')
+    .select('*')
+    .order('order_index');
 
-      <div class="tips-grid"></div>
+  if (error) { console.error(error); return; }
+  window.priceBreakdownData = data.map(row => ({
+    label: row.label,
+    pct: Number(row.pct),
+    eur: row.eur,
+    color: row.color_var,
+    dark: row.dark_label
+  }));
+}
 
-      <div class="label-section">
-        <h3 class="section-heading">Was bedeuten Gütesiegel?</h3>
-        <p class="card-sub">Die 6 wichtigsten Textilsiegel im Vergleich — nach Strenge der Kontrolle</p>
+// ============================================
+// CO2_BREAKDOWN (Kapitel 6 — CO2-Donut)
+// ============================================
+window.co2BreakdownData = [];
 
-        <div class="label-grid"></div>
+async function loadCo2Breakdown() {
+  const { data, error } = await supabaseClient
+    .from('co2_breakdown')
+    .select('*')
+    .order('order_index');
 
-        <div class="siegel-note" data-content-key="chapter7-siegel-note">
-          <strong>Falle im Handel:</strong> Das mit Abstand häufigste Siegel im Handel — OEKO-TEX Standard 100 — schafft es nicht in diese Top 6.
-        </div>
-      </div>
-    </div>
-  </section>
+  if (error) { console.error(error); return; }
+  window.co2BreakdownData = data.map(row => ({
+    label: row.label,
+    pct: Number(row.pct),
+    kg: Number(row.kg),
+    color: row.color_var,
+    highlight: row.highlight
+  }));
+}
 
-  <!-- QUELLENVERZEICHNIS -->
-  <section class="sources-section" id="quellen">
-    <div class="sources-content">
-      <h2 class="sources-title">Quellenverzeichnis</h2>
-      <p class="sources-intro">Alle in dieser Dokumentation verwendeten Zahlen, Studien und Datenquellen im Überblick.</p>
-      <ul class="sources-list"></ul>
-      <a href="#hero" class="sources-back">↑ Zurück zum Anfang</a>
-    </div>
-  </section>
+// ============================================
+// BALANCE_TILES (Kapitel 6 — Gesamtbilanz)
+// ============================================
+async function loadBalanceTiles() {
+  const { data, error } = await supabaseClient
+    .from('balance_tiles')
+    .select('*')
+    .order('order_index');
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-content">
-      <p class="footer-title">JeansUnstitched</p>
-      <p class="footer-sub">Interaktive Dokumentation · Modul Interaktive Medien</p>
-      <p class="footer-credits">Daten &amp; Quellen: <a href="#quellen">Quellenverzeichnis</a> · Visualisierung: D3.js, vanilla JS</p>
-    </div>
-  </footer>
+  if (error) { console.error(error); return; }
 
+  const grid = document.querySelector('.balance-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  data.forEach(tile => {
+    const el = document.createElement('div');
+    el.className = 'balance-tile';
+    el.innerHTML = `
+      <div class="balance-icon">${tile.icon}</div>
+      <div class="balance-value">${tile.value}</div>
+      <div class="balance-label">${tile.label}</div>
+    `;
+    grid.appendChild(el);
+  });
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/world-map.js"></script>
-  <script src="js/transport-map.js"></script>
-  <script src="js/main.js"></script>
-</body>
-</html>
+// ============================================
+// ACTION_TIPS (Kapitel 7 — Tipp-Karten)
+// ============================================
+async function loadActionTips() {
+  const { data, error } = await supabaseClient
+    .from('action_tips')
+    .select('*')
+    .order('order_index');
+
+  if (error) { console.error(error); return; }
+
+  const grid = document.querySelector('.tips-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  data.forEach(tip => {
+    const el = document.createElement('div');
+    el.className = 'tip-card';
+    el.innerHTML = `
+      <div class="tip-num">${tip.num}</div>
+      <div class="tip-title">${tip.title}</div>
+      <div class="tip-text">${tip.body}</div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+// ============================================
+// CERTIFICATIONS (Kapitel 7 — Gütesiegel)
+// ============================================
+async function loadCertifications() {
+  const { data, error } = await supabaseClient
+    .from('certifications')
+    .select('*')
+    .order('order_index');
+
+  if (error) { console.error(error); return; }
+
+  const grid = document.querySelector('.label-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  data.forEach(cert => {
+    const stars = '★'.repeat(cert.rating_stars) +
+      (cert.rating_stars < 5 ? `<span class="star-empty">${'★'.repeat(5 - cert.rating_stars)}</span>` : '');
+    const el = document.createElement('div');
+    el.className = 'label-item label-' + cert.tier;
+    el.innerHTML = `
+      <div class="label-badge">${cert.badge}</div>
+      <div class="label-name">${cert.name}</div>
+      <div class="label-desc">${cert.description}</div>
+      <div class="label-rating">${stars}</div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+// ============================================
+// SOURCES (Quellenverzeichnis)
+// ============================================
+async function loadSources() {
+  const { data, error } = await supabaseClient
+    .from('sources')
+    .select('*')
+    .order('order_index');
+
+  if (error) { console.error(error); return; }
+
+  const list = document.querySelector('.sources-list');
+  if (!list) return;
+  list.innerHTML = '';
+  data.forEach(src => {
+    const li = document.createElement('li');
+    if (src.url) {
+      li.innerHTML = `<a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>`;
+    } else {
+      li.textContent = src.title;
+    }
+    list.appendChild(li);
+  });
+}
