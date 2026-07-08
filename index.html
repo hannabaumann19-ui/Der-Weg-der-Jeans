@@ -333,39 +333,25 @@
         <h3>Die globale Reise — von der Baumwolle bis Würzburg</h3>
         <p class="card-sub">Ein beispielhafter, plausibler Weg entlang der größten Produktions- und Handelszentren</p>
 
-        <div class="transport-legend">
-          <div class="transport-legend-item"><span class="transport-legend-dot dot-cotton"></span>Baumwollernte</div>
-          <div class="transport-legend-item"><span class="transport-legend-dot dot-spinweb"></span>Spinnen &amp; Weben</div>
-          <div class="transport-legend-item"><span class="transport-legend-dot dot-sewing"></span>Nähen</div>
-          <div class="transport-legend-item"><span class="transport-legend-dot dot-transport"></span>Transport</div>
-        </div>
-
-        <div id="transport-map-container" data-loading="true">
-          <p class="map-loading-text">Karte wird geladen …</p>
-        </div>
+        <div id="transport-map-container" data-loading="true"></div>
 
         <div class="map-controls">
           <button class="btn-animate" id="transport-play-btn" type="button">▶ Route abspielen</button>
         </div>
 
-        <div class="map-info-box" id="transport-map-info">← Klicke auf einen Punkt oder starte die Animation</div>
+        <div class="transport-legend" id="transport-legend">
+          <div class="transport-legend-item" data-legend-cat="cotton"><span class="transport-legend-dot dot-cotton"></span>Baumwollernte</div>
+          <div class="transport-legend-item" data-legend-cat="spinweb"><span class="transport-legend-dot dot-spinweb"></span>Spinnen &amp; Weben</div>
+          <div class="transport-legend-item" data-legend-cat="sewing"><span class="transport-legend-dot dot-sewing"></span>Nähen</div>
+          <div class="transport-legend-item" data-legend-cat="transport"><span class="transport-legend-dot dot-transport"></span>Transport</div>
+        </div>
+
+        <div class="map-info-box" id="transport-map-info">← Klicke auf einen Punkt, fahre über eine Strecke, oder starte die Animation</div>
 
         <div class="total-stats">
           <div class="total-stat">
             <div class="total-stat-val" id="transport-total-km">~25.800 km</div>
             <div class="total-stat-label">Gesamtstrecke</div>
-          </div>
-          <div class="total-stat">
-            <div class="total-stat-val">4</div>
-            <div class="total-stat-label">Länder auf dem Landweg</div>
-          </div>
-          <div class="total-stat">
-            <div class="total-stat-val">5+</div>
-            <div class="total-stat-label">Umlade-Punkte</div>
-          </div>
-          <div class="total-stat">
-            <div class="total-stat-val">3</div>
-            <div class="total-stat-label">Transportmittel</div>
           </div>
         </div>
       </div>
