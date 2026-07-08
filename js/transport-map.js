@@ -25,12 +25,13 @@
     transport: 'var(--amber)'
   };
 
-  function colorForWaypoint(id, waypoints, steps) {
-    // Farbe des Ortes = Kategorie des ersten Segments, das an diesem Ort startet
-    // (bzw. des Segments, das dort endet, für den Zielort)
-    const outgoing = steps.find(s => s.from_id === id);
+  function colorForWaypoint(wp, steps) {
+    // Eigene Kategorie hat Vorrang (z.B. Taschkent = "cotton",
+    // unabhängig davon, welche Kategorie die abgehende Strecke hat).
+    if (wp.category && CATEGORY_COLOR[wp.category]) return CATEGORY_COLOR[wp.category];
+    const outgoing = steps.find(s => s.from_id === wp.id);
     if (outgoing) return CATEGORY_COLOR[outgoing.category] || 'var(--navy)';
-    const incoming = steps.find(s => s.to_id === id);
+    const incoming = steps.find(s => s.to_id === wp.id);
     if (incoming) return CATEGORY_COLOR[incoming.category] || 'var(--navy)';
     return 'var(--navy)';
   }
@@ -121,13 +122,13 @@
       g.append('circle')
         .attr('class', 'transport-waypoint-pulse')
         .attr('r', 5)
-        .attr('fill', d => colorForWaypoint(d.id, waypoints, steps))
+        .attr('fill', d => colorForWaypoint(d, steps))
         .attr('opacity', 0.5);
 
       g.append('circle')
         .attr('class', 'transport-waypoint-core')
         .attr('r', 5)
-        .attr('fill', d => colorForWaypoint(d.id, waypoints, steps))
+        .attr('fill', d => colorForWaypoint(d, steps))
         .attr('stroke', 'white')
         .attr('stroke-width', 1.5);
 
@@ -150,13 +151,20 @@
     }
 
     function showWaypointInfo(wp) {
+      const infoBox = document.getElementById('transport-map-info');
+      // Eigener Info-Text hat Vorrang (z.B. Taschkent = Start der Reise,
+      // gehört zu keiner der Transport-Etappen).
+      if (wp.info) {
+        if (infoBox) infoBox.innerHTML = wp.info;
+        highlightLegend(wp.category || null);
+        return;
+      }
       const relatedSeg = steps.find(s => s.from_id === wp.id || s.to_id === wp.id);
       if (relatedSeg) {
         showStepInfo(relatedSeg);
-        highlightLegend(relatedSeg.category);
-      } else {
-        const infoBox = document.getElementById('transport-map-info');
-        if (infoBox) infoBox.innerHTML = `<strong>${wp.name}</strong> — ${wp.sub || ''}`;
+        highlightLegend(wp.category || relatedSeg.category);
+      } else if (infoBox) {
+        infoBox.innerHTML = `<strong>${wp.name}</strong> — ${wp.sub || ''}`;
       }
     }
 
