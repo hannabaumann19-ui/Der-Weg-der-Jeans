@@ -1237,7 +1237,21 @@ p { margin-bottom: 1rem; color: var(--navy); }
   gap: 0.5rem;
   font-size: 0.8rem;
   color: var(--navy);
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  transition: background 0.2s, box-shadow 0.2s;
 }
+
+.transport-legend-item.active {
+  font-weight: 600;
+  background: var(--beige-warm);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+.transport-legend-item.active .transport-legend-dot.dot-cotton    { box-shadow: 0 0 0 3px rgba(90,122,85,0.25); }
+.transport-legend-item.active .transport-legend-dot.dot-spinweb   { box-shadow: 0 0 0 3px rgba(26,39,68,0.25); }
+.transport-legend-item.active .transport-legend-dot.dot-sewing    { box-shadow: 0 0 0 3px rgba(192,83,58,0.25); }
+.transport-legend-item.active .transport-legend-dot.dot-transport { box-shadow: 0 0 0 3px rgba(212,134,10,0.25); }
 
 .transport-legend-dot {
   width: 12px;
