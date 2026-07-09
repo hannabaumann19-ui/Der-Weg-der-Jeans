@@ -88,11 +88,14 @@
 
     const geoPath = d3.geoPath(projection);
 
+    // Container für alles, was gezoomt/verschoben werden soll
+    const zoomLayer = svg.append('g').attr('class', 'zoom-layer');
+
     d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
       .then(world => {
         const countries = topojson.feature(world, world.objects.countries).features;
 
-        svg.append('g')
+        zoomLayer.append('g')
           .attr('class', 'land-masses')
           .selectAll('path')
           .data(countries)
@@ -102,7 +105,7 @@
             .attr('stroke', beigeDark)
             .attr('stroke-width', 0.4);
 
-        const markers = svg.append('g').attr('class', 'cotton-markers');
+        const markers = zoomLayer.append('g').attr('class', 'cotton-markers');
 
         cottonRegions.forEach(region => {
           const feature = countries.find(c => String(c.id) === String(region.iso_numeric));
@@ -129,6 +132,34 @@
             .attr('r', r)
             .attr('fill', color)
             .attr('opacity', 0.85);
+        });
+
+        // ------------------------------------------
+        // ZOOM: Mausrad/Pinch direkt auf der Karte,
+        // plus +/- Buttons für Klick-Zoom
+        // ------------------------------------------
+        const zoomBehavior = d3.zoom()
+          .scaleExtent([1, 6])
+          .translateExtent([[0, 0], [width, height]])
+          .on('zoom', (event) => {
+            zoomLayer.attr('transform', event.transform);
+          });
+
+        svg.call(zoomBehavior);
+
+        const zoomControls = document.createElement('div');
+        zoomControls.className = 'map-zoom-controls';
+        zoomControls.innerHTML = `
+          <button type="button" class="map-zoom-btn" id="cotton-zoom-in" aria-label="Karte vergrößern">+</button>
+          <button type="button" class="map-zoom-btn" id="cotton-zoom-out" aria-label="Karte verkleinern">−</button>
+        `;
+        container.appendChild(zoomControls);
+
+        document.getElementById('cotton-zoom-in').addEventListener('click', () => {
+          svg.transition().duration(250).call(zoomBehavior.scaleBy, 1.4);
+        });
+        document.getElementById('cotton-zoom-out').addEventListener('click', () => {
+          svg.transition().duration(250).call(zoomBehavior.scaleBy, 1 / 1.4);
         });
 
         const legend = document.createElement('div');
