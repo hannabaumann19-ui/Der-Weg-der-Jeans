@@ -57,7 +57,7 @@ async function loadHeroStats() {
   data.forEach((row, i) => {
     const pill = pills[i];
     if (!pill) return;
-    pill.querySelector('.stat-num').dataset.target = row.value.replace(/\./g, '');
+    pill.querySelector('.stat-num').dataset.count = row.value.replace(/\./g, '');
     pill.querySelector('.stat-unit').textContent = row.unit;
     pill.querySelector('.stat-label').textContent = row.label;
   });
