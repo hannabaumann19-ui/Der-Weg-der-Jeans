@@ -273,14 +273,16 @@ async function loadEnergyConsumption() {
   bar.innerHTML = '';
   let ariaLabel = 'Energieverteilung: ';
 
-  data.forEach(seg => {
+  data.forEach((seg, i) => {
     const legendItem = document.createElement('div');
     legendItem.className = 'energy-legend-item';
+    legendItem.dataset.index = i;
     legendItem.innerHTML = `<span class="energy-dot ${seg.category_key}"></span>${seg.label} — ${seg.pct}%`;
     legend.appendChild(legendItem);
 
     const segEl = document.createElement('div');
     segEl.className = 'energy-seg ' + seg.category_key;
+    segEl.dataset.index = i;
     segEl.style.width = seg.pct + '%';
     segEl.textContent = seg.pct >= 10 ? seg.pct + '%' : '';
     bar.appendChild(segEl);
@@ -288,6 +290,26 @@ async function loadEnergyConsumption() {
     ariaLabel += `${seg.label} ${seg.pct}%, `;
   });
   bar.setAttribute('aria-label', ariaLabel.replace(/, $/, ''));
+
+  function highlightEnergy(index) {
+    bar.querySelectorAll('.energy-seg').forEach(seg => {
+      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? '1' : '0.45';
+    });
+    legend.querySelectorAll('.energy-legend-item').forEach(item => {
+      const isActive = index === null || parseInt(item.dataset.index) === index;
+      item.style.opacity = isActive ? '1' : '0.5';
+      item.classList.toggle('highlight', isActive && index !== null);
+    });
+  }
+
+  bar.querySelectorAll('.energy-seg').forEach(seg => {
+    seg.addEventListener('mouseenter', () => highlightEnergy(parseInt(seg.dataset.index)));
+    seg.addEventListener('mouseleave', () => highlightEnergy(null));
+  });
+  legend.querySelectorAll('.energy-legend-item').forEach(item => {
+    item.addEventListener('mouseenter', () => highlightEnergy(parseInt(item.dataset.index)));
+    item.addEventListener('mouseleave', () => highlightEnergy(null));
+  });
 }
 
 // ============================================
