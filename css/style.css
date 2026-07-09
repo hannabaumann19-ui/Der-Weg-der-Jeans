@@ -874,7 +874,6 @@ p { margin-bottom: 1rem; color: var(--navy); }
   transition: filter 0.2s, opacity 0.2s;
 }
 
-.energy-seg:hover { filter: brightness(1.08); }
 .energy-seg.spinnen   { background: var(--navy); }
 .energy-seg.weben     { background: var(--navy-light); }
 .energy-seg.veredeln  { background: var(--terracotta); }
