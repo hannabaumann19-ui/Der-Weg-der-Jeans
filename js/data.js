@@ -293,7 +293,7 @@ async function loadEnergyConsumption() {
 
   function highlightEnergy(index) {
     bar.querySelectorAll('.energy-seg').forEach(seg => {
-      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? '1' : '0.45';
+      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? '1' : '0.35';
     });
     legend.querySelectorAll('.energy-legend-item').forEach(item => {
       const isActive = index === null || parseInt(item.dataset.index) === index;
