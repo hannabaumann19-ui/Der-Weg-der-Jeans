@@ -548,6 +548,23 @@ window.dataReady.then(function () {
 });
 
 // ============================================
+// QUELLENVERZEICHNIS (ausklappbar über Footer-Link)
+// ============================================
+
+const sourcesToggleLink = document.getElementById('sources-toggle-link');
+const sourcesCollapse = document.getElementById('sources-collapse');
+
+if (sourcesToggleLink && sourcesCollapse) {
+  sourcesToggleLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isOpen = sourcesCollapse.classList.toggle('open');
+    if (isOpen) {
+      sourcesCollapse.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+}
+
+// ============================================
 // KEYBOARD ACCESSIBILITY FOR CHAPTER NAVIGATION
 // ============================================
 
