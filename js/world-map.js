@@ -43,7 +43,8 @@
     let text = `<strong>${flag}${region.name}</strong><br>`
       + `~${region.production_share}% der Weltproduktion. ${waterLine}.`;
     if (region.irrigation) {
-      text += ` ${region.irrigation}.`;
+      const irrigationText = region.irrigation.trim();
+      text += ` ${irrigationText}${irrigationText.endsWith('.') ? '' : '.'}`;
     }
     return text;
   }
