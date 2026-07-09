@@ -372,7 +372,7 @@ p { margin-bottom: 1rem; color: var(--navy); }
 }
 
 .card-transport {
-  background: linear-gradient(135deg, #f5f0e8, #ede8dc);
+  background: white;
 }
 
 .card-action {
@@ -1048,7 +1048,6 @@ p { margin-bottom: 1rem; color: var(--navy); }
    ============================================ */
 
 .body-text {
-  font-size: 0.95rem;
   color: var(--navy);
   margin-bottom: 1.25rem;
 }
@@ -1398,69 +1397,10 @@ p { margin-bottom: 1rem; color: var(--navy); }
 }
 .total-stat-label { font-size: 0.7rem; color: var(--navy-faded); }
 
-/* ============================================
-   CO2 CHART
-   ============================================ */
-
-.co2-chart {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.co2-bar-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.co2-label {
-  font-size: 0.82rem;
-  color: var(--navy);
-  width: 200px;
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.co2-track {
-  flex: 1;
-  height: 28px;
-  background: var(--beige-warm);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.co2-fill {
-  height: 100%;
-  width: 0;
-  background: var(--navy);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 8px;
-  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.co2-fill span {
-  font-size: 0.75rem;
-  color: white;
-  white-space: nowrap;
-}
-
-.co2-high { background: var(--terracotta); }
-.co2-low  { background: var(--sage-dark); }
-.co2-user { background: var(--amber); }
-
 .chart-note {
   font-size: 0.72rem;
   color: var(--navy-faded);
   font-style: italic;
-}
-
-@media (max-width: 600px) {
-  .co2-label { width: 130px; font-size: 0.72rem; }
 }
 
 /* ============================================
@@ -1534,7 +1474,7 @@ footer {
 .price-donut-seg:hover { stroke-width: 34; }
 .price-pct-label {
   font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 9px;
   fill: white;
   text-anchor: middle;
@@ -1561,7 +1501,7 @@ footer {
 
 .price-donut-legend { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 0.55rem; }
 .price-legend-item {
-  display: flex; align-items: center; gap: 0.7rem; font-size: 0.85rem; color: var(--navy);
+  display: flex; align-items: center; gap: 0.7rem; font-size: 0.95rem; color: var(--navy);
   padding: 0.3rem 0.4rem; border-radius: 8px; transition: background 0.15s, opacity 0.2s; cursor: default;
 }
 .price-legend-item:hover { background: var(--beige-warm); }
@@ -1586,7 +1526,7 @@ footer {
 .wage-compare-num { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; line-height: 1; margin-bottom: 0.4rem; }
 .wage-compare-item.wage .wage-compare-num { color: var(--terracotta); }
 .wage-compare-item.price .wage-compare-num { color: var(--beige-light); }
-.wage-compare-desc { font-size: 0.8rem; color: var(--beige-mid); max-width: 180px; line-height: 1.4; }
+.wage-compare-desc { font-size: 0.88rem; color: var(--beige-mid); max-width: 180px; line-height: 1.4; }
 .wage-compare-vs { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; color: var(--terracotta); flex-shrink: 0; }
 
 /* ============================================
@@ -1629,17 +1569,6 @@ footer {
 .co2-legend-pct { font-family: var(--font-display); font-size: 0.9rem; color: var(--navy-faded); flex-shrink: 0; }
 .co2-legend-kg { font-size: 0.72rem; color: var(--navy-faded); flex-shrink: 0; width: 46px; text-align: right; }
 
-.co2-insight {
-  background: var(--beige-warm);
-  border-left: 3px solid var(--terracotta);
-  border-radius: 0 10px 10px 0;
-  padding: 1rem 1.25rem;
-  font-size: 0.87rem;
-  color: var(--navy);
-  line-height: 1.55;
-  margin-top: 1.5rem;
-}
-.co2-insight strong { color: var(--terracotta); }
 .chart-note { font-size: 0.72rem; color: var(--navy-faded); font-style: italic; margin-top: 0.9rem; }
 
 .balance-grid {
@@ -1723,3 +1652,90 @@ footer {
 
 @media (max-width: 720px) { .label-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .label-grid { grid-template-columns: 1fr; } }
+
+/* ============================================
+   QUELLENVERZEICHNIS
+   ============================================ */
+
+.sources-section {
+  background: var(--navy);
+}
+
+.sources-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+
+.sources-collapse.open {
+  grid-template-rows: 1fr;
+}
+
+.sources-collapse-clip {
+  overflow: hidden;
+}
+
+.sources-content {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 3rem var(--pad) 2.5rem;
+}
+
+.sources-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 700;
+  color: var(--beige-light);
+  margin-bottom: 0.6rem;
+}
+
+.sources-intro {
+  font-size: 0.88rem;
+  color: var(--beige-mid);
+  margin-bottom: 1.75rem;
+  max-width: 560px;
+}
+
+.sources-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.sources-list li {
+  font-size: 0.85rem;
+  color: var(--beige-mid);
+  line-height: 1.6;
+  padding-left: 1rem;
+  border-left: 2px solid var(--navy-light);
+}
+
+.sources-list li a {
+  color: var(--beige-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--navy-light);
+  transition: text-decoration-color 0.15s;
+}
+
+.sources-list li a:hover {
+  text-decoration-color: var(--terracotta);
+}
+
+.sources-list li strong {
+  color: var(--beige-light);
+  font-weight: 600;
+}
+
+.footer-credits a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.footer-credits a:hover {
+  color: rgba(200,185,154,0.9);
+}
