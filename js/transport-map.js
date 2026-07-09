@@ -178,45 +178,32 @@
 
     // ------------------------------------------
     // ANIMATION: Route abspielen + km live aufaddieren
+    // Eigene Zeitsteuerung (statt CSS-Transition), damit
+    // sich die Animation exakt an der aktuellen Stelle
+    // pausieren und fortsetzen lässt.
     // ------------------------------------------
     const playBtn = document.getElementById('transport-play-btn');
     const totalKmEl = document.getElementById('transport-total-km');
     let isPlaying = false;
+    let isPaused = false;
+    let pauseCurrentSegment = null;
+    let resumeCurrentSegment = null;
 
     function resetRoute() {
       steps.forEach((seg, i) => {
         const el = document.getElementById('transport-seg-' + i);
         if (!el) return;
         const len = el.getTotalLength();
-        el.style.transition = 'none';
         el.setAttribute('stroke-dashoffset', len);
       });
-    }
-
-    function moveShipAlong(pathEl, icon, duration) {
       gShip.selectAll('*').remove();
-      const len = pathEl.getTotalLength();
-      const shipText = gShip.append('text')
-        .attr('class', 'transport-icon')
-        .text(icon);
-
-      const start = performance.now();
-      function frame(now) {
-        const t = Math.min((now - start) / duration, 1);
-        const pt = pathEl.getPointAtLength(t * len);
-        shipText.attr('x', pt.x).attr('y', pt.y);
-        if (t < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
     }
 
-    function playSequence(i, runningKm) {
+    function runSegment(i, runningKm) {
       if (i >= steps.length) {
         isPlaying = false;
-        if (playBtn) {
-          playBtn.disabled = false;
-          playBtn.textContent = '↺ Reise neu starten';
-        }
+        isPaused = false;
+        if (playBtn) playBtn.textContent = '↺ Reise neu starten';
         if (totalKmEl) totalKmEl.textContent = TOTAL_KM_LABEL;
         highlightLegend(null);
         const infoBox = document.getElementById('transport-map-info');
@@ -233,27 +220,60 @@
 
       showStepInfo(seg);
       highlightLegend(seg.category);
-      moveShipAlong(el, seg.mode, duration);
 
-      el.style.transition = `stroke-dashoffset ${duration}ms ease`;
-      requestAnimationFrame(() => el.setAttribute('stroke-dashoffset', 0));
+      gShip.selectAll('*').remove();
+      const shipText = gShip.append('text').attr('class', 'transport-icon').text(seg.mode);
 
-      setTimeout(() => {
-        const newTotal = runningKm + Number(seg.km);
-        if (totalKmEl) totalKmEl.textContent = formatKm(newTotal);
-        playSequence(i + 1, newTotal);
-      }, duration + 500);
+      let elapsed = 0;
+      let lastTime = null;
+      let rafId = null;
+
+      function frame(now) {
+        if (lastTime === null) lastTime = now;
+        elapsed += now - lastTime;
+        lastTime = now;
+        const t = Math.min(elapsed / duration, 1);
+
+        el.setAttribute('stroke-dashoffset', len * (1 - t));
+        const pt = el.getPointAtLength(t * len);
+        shipText.attr('x', pt.x).attr('y', pt.y);
+
+        if (t < 1) {
+          rafId = requestAnimationFrame(frame);
+        } else {
+          const newTotal = runningKm + Number(seg.km);
+          if (totalKmEl) totalKmEl.textContent = formatKm(newTotal);
+          runSegment(i + 1, newTotal);
+        }
+      }
+
+      pauseCurrentSegment = () => { if (rafId) cancelAnimationFrame(rafId); };
+      resumeCurrentSegment = () => { lastTime = null; rafId = requestAnimationFrame(frame); };
+
+      rafId = requestAnimationFrame(frame);
     }
 
     if (playBtn) {
       playBtn.addEventListener('click', () => {
-        if (isPlaying) return;
-        isPlaying = true;
-        playBtn.disabled = true;
-        playBtn.textContent = 'Reise läuft …';
-        resetRoute();
-        if (totalKmEl) totalKmEl.textContent = '0 km';
-        playSequence(0, 0);
+        if (!isPlaying) {
+          // Frischer Start
+          isPlaying = true;
+          isPaused = false;
+          resetRoute();
+          if (totalKmEl) totalKmEl.textContent = '0 km';
+          playBtn.textContent = '⏸ Pause';
+          runSegment(0, 0);
+        } else if (!isPaused) {
+          // Pausieren
+          isPaused = true;
+          if (pauseCurrentSegment) pauseCurrentSegment();
+          playBtn.textContent = '▶ Weiter';
+        } else {
+          // Fortsetzen an exakt derselben Stelle
+          isPaused = false;
+          if (resumeCurrentSegment) resumeCurrentSegment();
+          playBtn.textContent = '⏸ Pause';
+        }
       });
     }
 
