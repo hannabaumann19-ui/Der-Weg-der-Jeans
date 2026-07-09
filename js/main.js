@@ -380,6 +380,7 @@ function initInsightToggle(btnId, contentId) {
 
 initInsightToggle('insight-btn', 'insight-text');
 initInsightToggle('co2-insight-btn', 'co2-insight-text');
+initInsightToggle('siegel-insight-btn', 'siegel-insight-text');
 
 // ============================================
 // KAPITEL 5 — PREIS-DONUT
