@@ -106,17 +106,23 @@ function animateCounter(el, target) {
 function initHeroCounters() {
   const heroNums = document.querySelectorAll('.stat-num[data-count]');
   heroNums.forEach(el => {
-    const target = parseInt(el.dataset.count);
-    animateCounterEl(el, target, 2000);
+    const raw = el.dataset.count.replace(',', '.');
+    const target = parseFloat(raw);
+    const decimals = raw.includes('.') ? raw.split('.')[1].length : 0;
+    animateCounterEl(el, target, 2000, decimals);
   });
 }
 
-function animateCounterEl(el, target, duration) {
+function animateCounterEl(el, target, duration, decimals = 0) {
   const start = performance.now();
   function update(now) {
     const progress = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
+    const current = target * eased;
+    el.textContent = current.toLocaleString('de-DE', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
     if (progress < 1) requestAnimationFrame(update);
   }
   requestAnimationFrame(update);
@@ -487,23 +493,26 @@ window.dataReady.then(function () {
 // ============================================
 // KAPITEL 6 — CO2-DONUT
 // Wartet auf window.dataReady, da die Daten aus
-// Supabase (co2_breakdown) kommen.
+// Supabase (co2_breakdown) kommen. Gleicher Aufbau
+// wie der Preis-Donut in Kapitel 5.
 // ============================================
 window.dataReady.then(function () {
   const co2Data = window.co2BreakdownData || [];
   if (!co2Data.length) return;
 
-  const svg = document.getElementById("co2-donut");
-  const legendEl = document.getElementById("co2-legend");
-  if (!svg || !legendEl) return;
-
   const svgNS = "http://www.w3.org/2000/svg";
+  const ring = document.getElementById("co2-donut");
+  const labelsG = document.getElementById("co2-labels");
+  const legendEl = document.getElementById("co2-legend");
+  if (!ring || !labelsG || !legendEl) return;
+
   const r = 50, cx = 60, cy = 60;
   const circumference = 2 * Math.PI * r;
   let cumulative = 0;
 
   co2Data.forEach((d, i) => {
     const segLen = (d.pct / 100) * circumference;
+
     const circle = document.createElementNS(svgNS, "circle");
     circle.setAttribute("class", "co2-donut-seg");
     circle.setAttribute("cx", cx);
@@ -513,7 +522,43 @@ window.dataReady.then(function () {
     circle.setAttribute("stroke-dasharray", `${segLen} ${circumference - segLen}`);
     circle.setAttribute("stroke-dashoffset", -cumulative);
     circle.setAttribute("data-index", i);
-    svg.appendChild(circle);
+    ring.appendChild(circle);
+
+    const midLen = cumulative + segLen / 2;
+    const angle = (midLen / circumference) * 2 * Math.PI - Math.PI / 2;
+    const cosA = Math.cos(angle), sinA = Math.sin(angle);
+
+    if (d.pct < 5) {
+      const outerR = r + 15, lineEndR = r + 26, textR = r + 30;
+
+      const line = document.createElementNS(svgNS, "line");
+      line.setAttribute("class", "price-leader");
+      line.setAttribute("x1", cx + outerR * cosA);
+      line.setAttribute("y1", cy + outerR * sinA);
+      line.setAttribute("x2", cx + lineEndR * cosA);
+      line.setAttribute("y2", cy + lineEndR * sinA);
+      line.setAttribute("data-index", i);
+      labelsG.appendChild(line);
+
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("class", "price-pct-label outside");
+      text.setAttribute("x", cx + textR * cosA);
+      text.setAttribute("y", cy + textR * sinA);
+      text.setAttribute("data-index", i);
+      text.setAttribute("text-anchor", cosA > 0.2 ? "start" : cosA < -0.2 ? "end" : "middle");
+      text.textContent = d.pct + "%";
+      labelsG.appendChild(text);
+    } else {
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("class", "price-pct-label");
+      text.setAttribute("x", cx + r * cosA);
+      text.setAttribute("y", cy + r * sinA);
+      text.setAttribute("data-index", i);
+      if (d.pct < 10) text.setAttribute("font-size", "7px");
+      text.textContent = d.pct + "%";
+      labelsG.appendChild(text);
+    }
+
     cumulative += segLen;
   });
 
@@ -533,15 +578,21 @@ window.dataReady.then(function () {
   });
 
   function highlightSeg(index) {
-    svg.querySelectorAll(".co2-donut-seg").forEach(seg => {
+    ring.querySelectorAll(".co2-donut-seg").forEach(seg => {
       seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? "1" : "0.35";
+    });
+    labelsG.querySelectorAll(".price-pct-label").forEach(lbl => {
+      lbl.style.opacity = (index === null || parseInt(lbl.dataset.index) === index) ? "1" : "0.25";
+    });
+    labelsG.querySelectorAll(".price-leader").forEach(ln => {
+      ln.style.opacity = (index === null || parseInt(ln.dataset.index) === index) ? "0.6" : "0.15";
     });
     legendEl.querySelectorAll(".co2-legend-item").forEach(item => {
       item.style.opacity = (index === null || parseInt(item.dataset.index) === index) ? "1" : "0.5";
     });
   }
 
-  svg.querySelectorAll(".co2-donut-seg").forEach(seg => {
+  ring.querySelectorAll(".co2-donut-seg").forEach(seg => {
     seg.addEventListener("mouseenter", () => highlightSeg(parseInt(seg.dataset.index)));
     seg.addEventListener("mouseleave", () => highlightSeg(null));
   });
