@@ -565,7 +565,7 @@ window.dataReady.then(function () {
 
   co2Data.forEach((d, i) => {
     const item = document.createElement("div");
-    item.className = "co2-legend-item" + (d.highlight ? " highlight" : "");
+    item.className = "co2-legend-item";
     item.dataset.index = i;
     item.innerHTML = `
       <span class="co2-legend-dot" style="background:${d.color}"></span>
@@ -589,7 +589,9 @@ window.dataReady.then(function () {
       ln.style.opacity = (index === null || parseInt(ln.dataset.index) === index) ? "0.6" : "0.15";
     });
     legendEl.querySelectorAll(".co2-legend-item").forEach(item => {
-      item.style.opacity = (index === null || parseInt(item.dataset.index) === index) ? "1" : "0.5";
+      const isActive = index === null || parseInt(item.dataset.index) === index;
+      item.style.opacity = isActive ? "1" : "0.5";
+      item.classList.toggle("highlight", isActive && index !== null);
     });
   }
 
