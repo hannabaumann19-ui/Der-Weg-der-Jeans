@@ -106,7 +106,12 @@ function animateCounter(el, target) {
 function initHeroCounters() {
   const heroNums = document.querySelectorAll('.stat-num[data-count]');
   heroNums.forEach(el => {
-    const raw = el.dataset.count.replace(',', '.');
+    let raw = el.dataset.count.replace(',', '.');
+    // Überflüssige Nullen am Ende der Nachkommastellen entfernen,
+    // egal wie viele in der Datenbank stehen (33.400 -> 33.4)
+    if (raw.includes('.')) {
+      raw = raw.replace(/0+$/, '').replace(/\.$/, '');
+    }
     const target = parseFloat(raw);
     const decimals = raw.includes('.') ? raw.split('.')[1].length : 0;
     animateCounterEl(el, target, 2000, decimals);
@@ -147,8 +152,12 @@ function triggerBars(container) {
       const targetW = el.style.width || '0%';
       el.style.width = '0%';
       setTimeout(() => {
-        el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
+        el.style.transition = `width 0.9s ease ${i * 150}ms`;
         el.style.width = targetW;
+        // Inline-Transition nach der einmaligen Wachstumsanimation
+        // wieder entfernen — sonst überschreibt sie dauerhaft die
+        // CSS-Übergänge für opacity/filter beim späteren Hovern.
+        setTimeout(() => { el.style.transition = ''; }, 900 + i * 150 + 100);
       }, 250);
     }
   });
