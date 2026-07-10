@@ -277,7 +277,10 @@ async function loadEnergyConsumption() {
     const legendItem = document.createElement('div');
     legendItem.className = 'energy-legend-item';
     legendItem.dataset.index = i;
-    legendItem.innerHTML = `<span class="energy-dot ${seg.category_key}"></span>${seg.label} — ${seg.pct}%`;
+    legendItem.innerHTML = `
+      <span class="energy-dot ${seg.category_key}"></span>
+      <span class="energy-legend-text">${seg.label} — ${seg.pct}%${seg.kwh_note ? `<span class="energy-legend-kwh">${seg.kwh_note}</span>` : ''}</span>
+    `;
     legend.appendChild(legendItem);
 
     const segEl = document.createElement('div');
@@ -287,7 +290,7 @@ async function loadEnergyConsumption() {
     segEl.textContent = seg.pct >= 10 ? seg.pct + '%' : '';
     bar.appendChild(segEl);
 
-    ariaLabel += `${seg.label} ${seg.pct}%, `;
+    ariaLabel += `${seg.label} ${seg.pct}%${seg.kwh_note ? ', ' + seg.kwh_note : ''}, `;
   });
   bar.setAttribute('aria-label', ariaLabel.replace(/, $/, ''));
 
