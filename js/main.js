@@ -174,7 +174,10 @@ if (energySegBar) {
 
       if (entry.isIntersecting) {
         energySegs.forEach((el, i) => {
-          const targetW = el.dataset.targetWidth || el.style.width || '0%';
+          // Zielbreite verlässlich aus den geladenen Daten holen
+          // (nicht aus dem DOM erraten — das war die Fehlerquelle).
+          const dataRow = (window.energyConsumptionData || [])[i];
+          const targetW = dataRow ? dataRow.pct + '%' : (el.dataset.targetWidth || '0%');
           el.dataset.targetWidth = targetW;
           el.style.width = '0%';
           const id = setTimeout(() => {
