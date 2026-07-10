@@ -882,11 +882,36 @@ p { margin-bottom: 1rem; color: var(--navy); }
 .energy-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.4rem;
+  gap: 0.9rem 1.6rem;
   margin-bottom: 1.25rem;
 }
 
-.energy-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--navy); cursor: pointer; transition: opacity 0.2s; }
+.energy-legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--navy);
+  cursor: pointer;
+  transition: opacity 0.2s;
+  max-width: 230px;
+}
+
+.energy-legend-item .energy-dot {
+  margin-top: 0.35em;
+}
+
+.energy-legend-text {
+  display: block;
+}
+
+.energy-legend-kwh {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--navy-faded);
+  margin-top: 0.15rem;
+  line-height: 1.4;
+}
 .energy-legend-item.highlight { font-weight: 600; }
 .energy-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 .energy-dot.spinnen  { background: var(--navy); }
