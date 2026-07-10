@@ -870,8 +870,7 @@ p { margin-bottom: 1rem; color: var(--navy); }
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
-  cursor: pointer;
-  transition: width 0.9s ease, filter 0.2s, opacity 0.2s;
+  transition: width 0.9s ease;
 }
 
 .energy-seg.spinnen   { background: var(--navy); }
@@ -892,8 +891,6 @@ p { margin-bottom: 1rem; color: var(--navy); }
   gap: 0.5rem;
   font-size: 0.82rem;
   color: var(--navy);
-  cursor: pointer;
-  transition: opacity 0.2s;
   max-width: 230px;
 }
 
@@ -912,7 +909,6 @@ p { margin-bottom: 1rem; color: var(--navy); }
   margin-top: 0.15rem;
   line-height: 1.4;
 }
-.energy-legend-item.highlight { font-weight: 600; }
 .energy-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 .energy-dot.spinnen  { background: var(--navy); }
 .energy-dot.weben    { background: var(--navy-light); }
