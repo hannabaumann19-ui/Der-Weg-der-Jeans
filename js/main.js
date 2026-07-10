@@ -67,7 +67,6 @@ const observer = new IntersectionObserver((entries) => {
       entry.target.classList.add('visible');
       // Trigger counters when chapter is visible
       triggerCounters(entry.target);
-      triggerBars(entry.target);
     }
   });
 }, { threshold: 0.1 });
@@ -139,24 +138,11 @@ window.dataReady.then(() => {
 });
 
 // ============================================
-// ANIMATED BARS (CO2, BAR CHARTS)
+// ANIMATED BARS
+// (die eigentliche Energie-Balken-Animation läuft
+// weiter unten über einen eigenen, wiederholbaren
+// Observer — hier nichts mehr nötig)
 // ============================================
-
-const barsTriggered = new Set();
-
-function triggerBars(container) {
-  const energySegs = container.querySelectorAll('.energy-seg');
-  energySegs.forEach((el, i) => {
-    if (!barsTriggered.has(el)) {
-      barsTriggered.add(el);
-      const targetW = el.style.width || '0%';
-      el.style.width = '0%';
-      setTimeout(() => {
-        el.style.width = targetW;
-      }, 250 + i * 150);
-    }
-  });
-}
 
 function triggerVisibleAnimations() {
   // Triggered by scroll for elements not in chapters
@@ -171,27 +157,33 @@ function triggerVisibleAnimations() {
 const energySegBar = document.querySelector('.energy-segbar');
 
 if (energySegBar) {
-  const energySegs = energySegBar.querySelectorAll('.energy-seg');
-  const energyTargets = new Map();
-  energySegs.forEach(el => energyTargets.set(el, el.style.width || '0%'));
+  let energyTimeouts = [];
 
   const energyObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
+      // Live abfragen statt einmalig beim Laden — die Balken werden
+      // erst später von data.js aus Supabase eingefügt und existieren
+      // beim ersten Aufruf hier sonst noch gar nicht.
+      const energySegs = energySegBar.querySelectorAll('.energy-seg');
+      if (!energySegs.length) return;
+
+      // Laufende, noch nicht ausgelöste Verzögerungen abbrechen,
+      // falls schnell rein- und rausgescrollt wird.
+      energyTimeouts.forEach(id => clearTimeout(id));
+      energyTimeouts = [];
+
       if (entry.isIntersecting) {
         energySegs.forEach((el, i) => {
-          el.style.transition = 'none';
+          const targetW = el.dataset.targetWidth || el.style.width || '0%';
+          el.dataset.targetWidth = targetW;
           el.style.width = '0%';
-          // Reflow erzwingen, damit der Browser den Reset auch
-          // wirklich anwendet, bevor die neue Transition startet.
-          void el.offsetWidth;
-          el.style.transition = `width 0.9s ease ${i * 150}ms, filter 0.2s`;
-          el.style.width = energyTargets.get(el);
+          const id = setTimeout(() => {
+            el.style.width = targetW;
+          }, i * 150);
+          energyTimeouts.push(id);
         });
       } else {
-        // Beim Verlassen ohne Animation zurücksetzen, damit der
-        // nächste Eintritt wieder bei 0% startet.
         energySegs.forEach(el => {
-          el.style.transition = 'none';
           el.style.width = '0%';
         });
       }
@@ -653,7 +645,6 @@ window.addEventListener('load', async () => {
     if (rect.top < window.innerHeight && rect.bottom > 0) {
       ch.classList.add('visible');
       triggerCounters(ch);
-      triggerBars(ch);
     }
   });
 
