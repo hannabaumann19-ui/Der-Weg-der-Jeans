@@ -264,6 +264,7 @@ async function loadEnergyConsumption() {
     .order('order_index');
 
   if (error) { console.error(error); return; }
+  window.energyConsumptionData = data;
 
   const legend = document.querySelector('.energy-legend');
   const bar = document.querySelector('.energy-segbar');
