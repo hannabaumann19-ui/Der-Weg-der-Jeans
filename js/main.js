@@ -152,13 +152,8 @@ function triggerBars(container) {
       const targetW = el.style.width || '0%';
       el.style.width = '0%';
       setTimeout(() => {
-        el.style.transition = `width 0.9s ease ${i * 150}ms`;
         el.style.width = targetW;
-        // Inline-Transition nach der einmaligen Wachstumsanimation
-        // wieder entfernen — sonst überschreibt sie dauerhaft die
-        // CSS-Übergänge für opacity/filter beim späteren Hovern.
-        setTimeout(() => { el.style.transition = ''; }, 900 + i * 150 + 100);
-      }, 250);
+      }, 250 + i * 150);
     }
   });
 }
