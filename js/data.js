@@ -276,6 +276,7 @@ async function loadEnergyConsumption() {
   data.forEach((seg, i) => {
     const legendItem = document.createElement('div');
     legendItem.className = 'energy-legend-item';
+    legendItem.dataset.index = i;
     legendItem.innerHTML = `
       <span class="energy-dot ${seg.category_key}"></span>
       <span class="energy-legend-text">${seg.label} — ${seg.pct}%${seg.kwh_note ? `<span class="energy-legend-kwh">${seg.kwh_note}</span>` : ''}</span>
@@ -284,6 +285,7 @@ async function loadEnergyConsumption() {
 
     const segEl = document.createElement('div');
     segEl.className = 'energy-seg ' + seg.category_key;
+    segEl.dataset.index = i;
     segEl.style.width = seg.pct + '%';
     segEl.textContent = seg.pct >= 10 ? seg.pct + '%' : '';
     bar.appendChild(segEl);
@@ -291,6 +293,28 @@ async function loadEnergyConsumption() {
     ariaLabel += `${seg.label} ${seg.pct}%${seg.kwh_note ? ', ' + seg.kwh_note : ''}, `;
   });
   bar.setAttribute('aria-label', ariaLabel.replace(/, $/, ''));
+
+  // Hover-Verknüpfung: Balken-Segment <-> Legenden-Eintrag,
+  // exakt das gleiche Prinzip wie bei den Kreisdiagrammen.
+  function highlightEnergy(index) {
+    bar.querySelectorAll('.energy-seg').forEach(seg => {
+      seg.style.opacity = (index === null || parseInt(seg.dataset.index) === index) ? '1' : '0.35';
+    });
+    legend.querySelectorAll('.energy-legend-item').forEach(item => {
+      const isActive = index === null || parseInt(item.dataset.index) === index;
+      item.style.opacity = isActive ? '1' : '0.5';
+      item.classList.toggle('highlight', isActive && index !== null);
+    });
+  }
+
+  bar.querySelectorAll('.energy-seg').forEach(seg => {
+    seg.addEventListener('mouseenter', () => highlightEnergy(parseInt(seg.dataset.index)));
+    seg.addEventListener('mouseleave', () => highlightEnergy(null));
+  });
+  legend.querySelectorAll('.energy-legend-item').forEach(item => {
+    item.addEventListener('mouseenter', () => highlightEnergy(parseInt(item.dataset.index)));
+    item.addEventListener('mouseleave', () => highlightEnergy(null));
+  });
 }
 
 // ============================================
