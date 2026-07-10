@@ -870,7 +870,8 @@ p { margin-bottom: 1rem; color: var(--navy); }
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
-  transition: width 0.9s ease;
+  cursor: pointer;
+  transition: width 0.9s ease, opacity 0.2s;
 }
 
 .energy-seg.spinnen   { background: var(--navy); }
@@ -892,6 +893,12 @@ p { margin-bottom: 1rem; color: var(--navy); }
   font-size: 0.82rem;
   color: var(--navy);
   max-width: 230px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.energy-legend-item.highlight {
+  font-weight: 600;
 }
 
 .energy-legend-item .energy-dot {
