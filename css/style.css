@@ -871,7 +871,7 @@ p { margin-bottom: 1rem; color: var(--navy); }
   white-space: nowrap;
   overflow: hidden;
   cursor: pointer;
-  transition: filter 0.2s, opacity 0.2s;
+  transition: width 0.9s ease, filter 0.2s, opacity 0.2s;
 }
 
 .energy-seg.spinnen   { background: var(--navy); }
